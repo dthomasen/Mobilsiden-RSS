@@ -10,7 +10,10 @@ import dk.whooper.mobilsiden.service.XMLDownloader;
 import dk.whooper.mobilsiden.service.XMLParser;
 import android.R;
 import android.support.v4.app.ListFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +29,10 @@ import android.widget.TextView;
 public class NyhederFragment extends ListFragment {
 	public static final String ARG_SECTION_NUMBER = "section_number";
 	private static final String TAG="NyhederFragment";
+	private List<Item> newsItems;
+	private ArrayList newsHeadlines;
+	private ArrayAdapter adapter;
+	private BroadcastReceiver updateReciever;
 
 	public NyhederFragment() {
 	}
@@ -39,17 +46,35 @@ public class NyhederFragment extends ListFragment {
 		newsList.setId(R.id.list);
 		DatabaseHelper dbConn = new DatabaseHelper(getActivity());
 		
-		List<Item> newsItems = dbConn.getAllItemsFromNews();
-		ArrayList newsHeadlines = new ArrayList();
+		newsItems = dbConn.getAllItemsFromNews();
+		newsHeadlines = new ArrayList();
 		for(Item i : newsItems){
 			newsHeadlines.add(i.getTitle());
 		}
 		
-		ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, newsHeadlines);
+		adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, newsHeadlines);
 
 		setListAdapter(adapter);
 
+		updateReciever = new BroadcastReceiver() {
 
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,"Nyheder broadcast recieved");
+				DatabaseHelper dbConn = new DatabaseHelper(getActivity());
+				newsItems = dbConn.getAllItemsFromWebTv();
+				for(Item i : newsItems){
+					newsHeadlines.add(i.getTitle());
+				}
+				adapter.notifyDataSetChanged();
+				dbConn.close();
+			}
+		};
+		
+		dbConn.close();
+		
+		getActivity().registerReceiver(updateReciever, new IntentFilter("ArticlesUpdated"));
 		return newsList;
 	}
 }

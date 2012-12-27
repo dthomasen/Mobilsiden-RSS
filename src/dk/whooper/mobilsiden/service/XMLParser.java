@@ -13,6 +13,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import dk.whooper.mobilsiden.business.Item;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 public class XMLParser implements Runnable{
@@ -73,6 +74,8 @@ public class XMLParser implements Runnable{
 			}
 		}
 		dbConn.close();
+		Intent i = new Intent("ArticlesUpdated");
+		context.sendBroadcast(i);
 	}
 
 	public List<Item> parse(InputStream in) throws XmlPullParserException, IOException {
