@@ -31,20 +31,8 @@ public class XMLParser implements Runnable{
 			InputStream fIn = context.openFileInput("rss.xml");
 			List<Item> items = parse(fIn);
 			
-			DatabaseHelper dbConn = new DatabaseHelper(context);
+			writeToDatabase(items);
 
-			for(Item i : items){
-				if(i.getLink().contains("web-tv")){
-					Log.d(TAG,"Adding web tv");
-					dbConn.addItemToWebTVDB(i);
-				}else if(i.getLink().contains("mobiltest")){
-					Log.d(TAG,"Adding test tv");
-					dbConn.addItemToReviewsDB(i);
-				}else if(i.getLink().contains("nyheder")){
-					Log.d(TAG,"Adding nyheder tv");
-					dbConn.addItemToNewsDB(i);
-				}
-			}
 		} catch (FileNotFoundException e) {
 			Log.d(TAG,"Filenotfound exception");
 		} catch (XmlPullParserException e) {
@@ -55,6 +43,24 @@ public class XMLParser implements Runnable{
 			e.printStackTrace();
 		} 
 
+	}
+	
+	public void writeToDatabase(List<Item> items){
+		DatabaseHelper dbConn = new DatabaseHelper(context);
+		
+		for(Item i : items){
+			if(i.getComments().contains("web-tv")){
+				Log.d(TAG,"Adding web tv");
+				dbConn.addItemToWebTVDB(i);
+			}else if(i.getComments().contains("mobiltest")){
+				Log.d(TAG,"Adding test tv");
+				dbConn.addItemToReviewsDB(i);
+			}else if(i.getComments().contains("nyheder")){
+				Log.d(TAG,"Adding nyheder tv");
+				dbConn.addItemToNewsDB(i);
+			}
+		}
+		dbConn.close();
 	}
 
 	public List<Item> parse(InputStream in) throws XmlPullParserException, IOException {
@@ -78,6 +84,7 @@ public class XMLParser implements Runnable{
 			String name = parser.getName();
 
 			if(name.equalsIgnoreCase("channel")){
+				Log.d(TAG,"Channel tag found");
 				items = readChannel(parser, items);
 			}
 		}  

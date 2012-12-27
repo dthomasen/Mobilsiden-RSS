@@ -31,7 +31,7 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
 	@Override
 	protected Intent doInBackground(Intent... params) {
 		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet request = new HttpGet("http://www.mobilsiden.dk/xml/rssfeed.php");
+		HttpGet request = new HttpGet("http://feeds.mobilsiden.dk/MobilsidendkNyhedsoversigt?format=xml");
 		HttpResponse webServerResponse = null;
 
 		try {
@@ -56,7 +56,6 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
 				e.printStackTrace();
 			}
 		}
-		Log.d("XMLDOWNLOADER", result);
 		return params[0];
 	}      
 
