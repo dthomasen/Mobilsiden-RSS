@@ -2,6 +2,8 @@ package dk.whooper.mobilsiden.screens;
 
 
 import dk.whooper.mobilsiden.service.XMLDownloader;
+import dk.whooper.mobilsiden.service.XMLParser;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,7 +26,7 @@ public class NyhederFragment extends Fragment {
 			Bundle savedInstanceState) {
 		
 		XMLDownloader xmlDownloader = new XMLDownloader();
-		xmlDownloader.execute("http://www.mobilsiden.dk/xml/rssfeed.php");
+		xmlDownloader.execute(getActivity());
 		
 		TextView textView = new TextView(getActivity());
 		textView.setGravity(Gravity.CENTER);

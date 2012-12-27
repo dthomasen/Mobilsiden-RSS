@@ -1,9 +1,13 @@
 package dk.whooper.mobilsiden.service;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,18 +16,21 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class XMLDownloader extends AsyncTask<String, Void, String> {
+public class XMLDownloader extends AsyncTask<Activity, Void, Activity> {
 
 	private String result;
 	private static final String TAG="XMLDownloader";
 
 	@Override
-	protected String doInBackground(String... params) {
+	protected Activity doInBackground(Activity... params) {
 		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet request = new HttpGet(params[0]);
+		HttpGet request = new HttpGet("http://www.mobilsiden.dk/xml/rssfeed.php");
 		HttpResponse webServerResponse = null;
 
 		try {
@@ -48,16 +55,9 @@ public class XMLDownloader extends AsyncTask<String, Void, String> {
 				e.printStackTrace();
 			}
 		}
-
-		if(webServerResponse.getStatusLine().getStatusCode() == 400){
-			return "badRequest";
-		}else if(webServerResponse.getStatusLine().getStatusCode() == 404){
-			return "notFound";
-		}
-		Log.d(TAG,result);
-		return result;
+		return params[0];
 	}      
-	
+
 	public String convertStreamToString(InputStream is) throws IOException {
 		if (is != null) {
 			StringBuilder sb = new StringBuilder();
@@ -65,7 +65,7 @@ public class XMLDownloader extends AsyncTask<String, Void, String> {
 
 			try {
 				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(is, "UTF-8"));
+						new InputStreamReader(is, "ISO-8859-1"));
 				while ((line = reader.readLine()) != null) {
 					sb.append(line);
 				}
@@ -79,7 +79,13 @@ public class XMLDownloader extends AsyncTask<String, Void, String> {
 	}
 
 	@Override
-	protected void onPostExecute(String result) {
+	protected void onPostExecute(Activity params) {
+		Log.d(TAG,"On post execute");
+
+		AndroidFileFunctions.writeToFile("rss.xml", result, params, Context.MODE_WORLD_READABLE);
+
+		XMLParser xmlParser = new XMLParser(params);
+		xmlParser.run();
 	}
 
 	@Override
