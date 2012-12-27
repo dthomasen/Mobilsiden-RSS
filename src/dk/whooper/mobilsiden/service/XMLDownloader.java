@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,13 +23,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class XMLDownloader extends AsyncTask<Activity, Void, Activity> {
+public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
 
 	private String result;
 	private static final String TAG="XMLDownloader";
 
 	@Override
-	protected Activity doInBackground(Activity... params) {
+	protected Intent doInBackground(Intent... params) {
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpGet request = new HttpGet("http://www.mobilsiden.dk/xml/rssfeed.php");
 		HttpResponse webServerResponse = null;
@@ -55,6 +56,7 @@ public class XMLDownloader extends AsyncTask<Activity, Void, Activity> {
 				e.printStackTrace();
 			}
 		}
+		Log.d("XMLDOWNLOADER", result);
 		return params[0];
 	}      
 
@@ -79,12 +81,13 @@ public class XMLDownloader extends AsyncTask<Activity, Void, Activity> {
 	}
 
 	@Override
-	protected void onPostExecute(Activity params) {
+	protected void onPostExecute(Intent params) {
 		Log.d(TAG,"On post execute");
 
-		AndroidFileFunctions.writeToFile("rss.xml", result, params, Context.MODE_WORLD_READABLE);
+		Context context = (Context) params.getExtras().getSerializable("Activity");
+		AndroidFileFunctions.writeToFile("rss.xml", result, context, Context.MODE_WORLD_READABLE);
 
-		XMLParser xmlParser = new XMLParser(params);
+		XMLParser xmlParser = new XMLParser(context);
 		xmlParser.run();
 	}
 

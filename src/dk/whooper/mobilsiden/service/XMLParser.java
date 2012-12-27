@@ -30,15 +30,18 @@ public class XMLParser implements Runnable{
 		try {
 			InputStream fIn = context.openFileInput("rss.xml");
 			List<Item> items = parse(fIn);
-
+			
 			DatabaseHelper dbConn = new DatabaseHelper(context);
 
 			for(Item i : items){
 				if(i.getLink().contains("web-tv")){
+					Log.d(TAG,"Adding web tv");
 					dbConn.addItemToWebTVDB(i);
 				}else if(i.getLink().contains("mobiltest")){
+					Log.d(TAG,"Adding test tv");
 					dbConn.addItemToReviewsDB(i);
 				}else if(i.getLink().contains("nyheder")){
+					Log.d(TAG,"Adding nyheder tv");
 					dbConn.addItemToNewsDB(i);
 				}
 			}

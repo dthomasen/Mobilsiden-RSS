@@ -1,9 +1,13 @@
 package dk.whooper.mobilsiden.screens;
 
+import java.io.Serializable;
+
 import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.service.SectionsPagerAdapter;
+import dk.whooper.mobilsiden.service.XMLDownloader;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,7 +24,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener {
+		ActionBar.TabListener, Serializable {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -76,6 +80,12 @@ public class MainActivity extends FragmentActivity implements
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
+		
+		Intent downloadIntent = new Intent();
+		downloadIntent.putExtra("Activity", this);
+		downloadIntent.putExtra("site", "http://feeds.mobilsiden.dk/MobilsidendkNyhedsoversigt?format=xml");
+		XMLDownloader xmlDownloader = new XMLDownloader();
+		xmlDownloader.execute(downloadIntent);
 	}
 
 	@Override
