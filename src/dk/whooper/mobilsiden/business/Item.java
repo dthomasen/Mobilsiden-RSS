@@ -8,6 +8,19 @@ public class Item {
 	public String author;
 	public String pubDate;
 	
+	public Item(){
+		
+	}
+	
+	public Item(String title, String link, String description, String comments, String author, String pubDate){
+		this.title = title;
+		this.link = link;
+		this.description = description;
+		this.comments = comments;
+		this.author = author;
+		this.pubDate = pubDate;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
