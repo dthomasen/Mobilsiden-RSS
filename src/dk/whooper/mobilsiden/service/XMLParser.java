@@ -34,7 +34,13 @@ public class XMLParser implements Runnable{
 			DatabaseHelper dbConn = new DatabaseHelper(context);
 
 			for(Item i : items){
-				dbConn.addItem(i);
+				if(i.getLink().contains("web-tv")){
+					dbConn.addItemToWebTVDB(i);
+				}else if(i.getLink().contains("mobiltest")){
+					dbConn.addItemToReviewsDB(i);
+				}else if(i.getLink().contains("nyheder")){
+					dbConn.addItemToNewsDB(i);
+				}
 			}
 		} catch (FileNotFoundException e) {
 			Log.d(TAG,"Filenotfound exception");
