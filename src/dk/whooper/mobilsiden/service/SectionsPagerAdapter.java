@@ -1,6 +1,9 @@
 package dk.whooper.mobilsiden.service;
 
 import dk.whooper.mobilsiden.R;
+import dk.whooper.mobilsiden.screens.AnmeldelserFragment;
+import dk.whooper.mobilsiden.screens.NyhederFragment;
+import dk.whooper.mobilsiden.screens.WebTvFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

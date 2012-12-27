@@ -1,5 +1,8 @@
-package dk.whooper.mobilsiden.service;
+package dk.whooper.mobilsiden.screens;
 
+import java.util.concurrent.ExecutionException;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -8,28 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-/**
-	 * A dummy fragment representing a section of the app, but that simply
-	 * displays dummy text.
-	 */
 	public class WebTvFragment extends Fragment {
-		/**
-		 * The fragment argument representing the section number for this
-		 * fragment.
-		 */
-		public static final String ARG_SECTION_NUMBER = "section_number";
 
+		public static final String ARG_SECTION_NUMBER = "section_number";
+		private String result;
+		
 		public WebTvFragment() {
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			// Create a new TextView and set its text to the fragment's section
-			// number argument value.
+			
 			TextView textView = new TextView(getActivity());
 			textView.setGravity(Gravity.CENTER);
-			textView.setText("WebTV");
+			textView.setText(result);
 			return textView;
 		}
 	}

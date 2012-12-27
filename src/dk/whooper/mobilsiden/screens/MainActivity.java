@@ -1,5 +1,6 @@
-package dk.whooper.mobilsiden;
+package dk.whooper.mobilsiden.screens;
 
+import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.service.SectionsPagerAdapter;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
