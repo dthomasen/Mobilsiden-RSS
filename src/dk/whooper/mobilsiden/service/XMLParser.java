@@ -17,9 +17,11 @@ import android.util.Log;
 
 public class XMLParser implements Runnable{
 
-	Context context;
+	private Context context;
 	private static final String TAG="XMLParser";
 	private static final String ns = null;
+	private InputStream fIn;
+	private List<Item> items;
 
 	public XMLParser(Context context){
 		this.context = context;
@@ -28,11 +30,21 @@ public class XMLParser implements Runnable{
 	public void run(){
 		Log.d(TAG, "Service started");
 		try {
-			InputStream fIn = context.openFileInput("rss.xml");
-			List<Item> items = parse(fIn);
+			fIn = context.openFileInput("newsRSS.xml");
+			items = parse(fIn);
 			
 			writeToDatabase(items);
-
+			
+			fIn = context.openFileInput("webTvRSS.xml");
+			items = parse(fIn);
+			
+			writeToDatabase(items);
+			
+			fIn = context.openFileInput("reviewsRSS.xml");
+			items = parse(fIn);
+			
+			writeToDatabase(items);
+			
 		} catch (FileNotFoundException e) {
 			Log.d(TAG,"Filenotfound exception");
 		} catch (XmlPullParserException e) {

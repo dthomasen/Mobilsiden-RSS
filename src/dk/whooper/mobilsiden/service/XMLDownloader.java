@@ -25,41 +25,25 @@ import android.util.Log;
 
 public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
 
-	private String result;
 	private static final String TAG="XMLDownloader";
+	private Context context;
 
 	@Override
 	protected Intent doInBackground(Intent... params) {
-		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet request = new HttpGet("http://feeds.mobilsiden.dk/MobilsidendkNyhedsoversigt?format=xml");
-		HttpResponse webServerResponse = null;
-
-		try {
-			webServerResponse = httpClient.execute(request);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		HttpEntity httpEntity = webServerResponse.getEntity();
-
-		if(httpEntity != null){
-			InputStream inStream;
-			try {
-				inStream = httpEntity.getContent();
-				result = convertStreamToString(inStream);
-				inStream.close();
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		
+		String newsXml = downloadXML("http://feeds.mobilsiden.dk/MobilsidendkNyhedsoversigt?format=xml");
+		String webTvXml = downloadXML("http://feeds.mobilsiden.dk/MobilsidendkAnmeldelser?format=xml");
+		String reviewsXml = downloadXML("http://feeds.mobilsiden.dk/MobilsidendkWebvideo?format=xml");
+		
+		context = (Context) params[0].getExtras().getSerializable("Activity");
+		AndroidFileFunctions.writeToFile("newsRSS.xml", newsXml, context, Context.MODE_WORLD_READABLE);
+		AndroidFileFunctions.writeToFile("webTvRSS.xml", webTvXml, context, Context.MODE_WORLD_READABLE);
+		AndroidFileFunctions.writeToFile("reviewsRSS.xml", reviewsXml, context, Context.MODE_WORLD_READABLE);
+		
 		return params[0];
 	}      
 
-	public String convertStreamToString(InputStream is) throws IOException {
+	private String convertStreamToString(InputStream is) throws IOException {
 		if (is != null) {
 			StringBuilder sb = new StringBuilder();
 			String line = null;
@@ -79,13 +63,40 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
 		}
 	}
 
+	private String downloadXML(String page){
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpGet request = new HttpGet(page);
+		HttpResponse webServerResponse = null;
+
+		try {
+			webServerResponse = httpClient.execute(request);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		HttpEntity httpEntity = webServerResponse.getEntity();
+		String result = "";
+		if(httpEntity != null){
+			InputStream inStream;
+			try {
+				inStream = httpEntity.getContent();
+				result = convertStreamToString(inStream);
+				inStream.close();
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	@Override
 	protected void onPostExecute(Intent params) {
 		Log.d(TAG,"On post execute");
-
-		Context context = (Context) params.getExtras().getSerializable("Activity");
-		AndroidFileFunctions.writeToFile("rss.xml", result, context, Context.MODE_WORLD_READABLE);
-
+		
 		XMLParser xmlParser = new XMLParser(context);
 		xmlParser.run();
 	}
