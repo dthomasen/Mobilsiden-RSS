@@ -44,4 +44,8 @@ public class Item {
 	public void setPubDate(String pubDate) {
 		this.pubDate = pubDate;
 	}
+	
+	public String toString(){
+		return title+" "+link+" "+description+" "+comments+" "+author+" "+pubDate;
+	}
 }
