@@ -83,11 +83,19 @@ public class WebTvFragment extends ListFragment{
 	}
 
 	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if(updateReciever != null){
+			getActivity().unregisterReceiver(updateReciever);
+		}
+	}
+
+	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
 		super.onListItemClick(l, v, position, id);
 		DatabaseHelper dbConn = new DatabaseHelper(getActivity());
-	    String link = dbConn.getLinkFromWebTv((String) webtvList.getItemAtPosition(position));
+		String link = dbConn.getLinkFromWebTv((String) webtvList.getItemAtPosition(position));
 
 		Intent intent = new Intent(getActivity(), WebViewer.class);
 		intent.putExtra("link", link);

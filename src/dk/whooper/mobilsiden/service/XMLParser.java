@@ -66,13 +66,10 @@ public class XMLParser extends AsyncTask<Void, Void, Void>{
 
 		for(Item i : items){
 			if(i.getComments().contains("web-tv")){
-				Log.d(TAG,"Adding web tv");
 				dbConn.addItemToWebTVDB(i);
 			}else if(i.getComments().contains("mobiltest")){
-				Log.d(TAG,"Adding test tv");
 				dbConn.addItemToReviewsDB(i);
 			}else if(i.getComments().contains("nyheder")){
-				Log.d(TAG,"Adding nyheder tv");
 				dbConn.addItemToNewsDB(i);
 			}
 		}

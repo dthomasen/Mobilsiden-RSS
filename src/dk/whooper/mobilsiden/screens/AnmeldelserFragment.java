@@ -3,26 +3,22 @@ package dk.whooper.mobilsiden.screens;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.whooper.mobilsiden.business.Item;
-import dk.whooper.mobilsiden.service.DatabaseHelper;
-
 import android.R;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import dk.whooper.mobilsiden.business.Item;
+import dk.whooper.mobilsiden.service.DatabaseHelper;
 
 public class AnmeldelserFragment extends ListFragment {
 
@@ -79,6 +75,14 @@ public class AnmeldelserFragment extends ListFragment {
 		return reviewsList;
 	}
 	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if(updateReciever != null){
+			getActivity().unregisterReceiver(updateReciever);
+		}
+	}
+
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id)
 	{
