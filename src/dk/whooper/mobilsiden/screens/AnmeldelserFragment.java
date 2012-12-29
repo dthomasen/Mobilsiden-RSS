@@ -32,6 +32,7 @@ public class AnmeldelserFragment extends ListFragment {
 	private ArrayAdapter adapter;
 	private List<Item> reviewsItems;
 	private ArrayList reviewsHeadlines;
+	private ListView reviewsList;
 
 	public AnmeldelserFragment() {
 	}
@@ -40,7 +41,7 @@ public class AnmeldelserFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		ListView reviewsList = new ListView(getActivity());
+		reviewsList = new ListView(getActivity());
 		reviewsList.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		reviewsList.setId(R.id.list);
 		DatabaseHelper dbConn = new DatabaseHelper(getActivity());
@@ -76,5 +77,17 @@ public class AnmeldelserFragment extends ListFragment {
 		getActivity().registerReceiver(updateReciever, new IntentFilter("ArticlesUpdated"));
 		
 		return reviewsList;
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id)
+	{
+		super.onListItemClick(l, v, position, id);
+		DatabaseHelper dbConn = new DatabaseHelper(getActivity());
+	    String link = dbConn.getLinkFromReviews((String) reviewsList.getItemAtPosition(position));
+
+		Intent intent = new Intent(getActivity(), WebViewer.class);
+		intent.putExtra("link", link);
+		startActivity(intent);
 	}
 }

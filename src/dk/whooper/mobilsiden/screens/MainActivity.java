@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener, Serializable {
+		ActionBar.TabListener, Serializable{
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -69,7 +69,7 @@ public class MainActivity extends FragmentActivity implements
 						actionBar.setSelectedNavigationItem(position);
 					}
 				});
-
+		
 		// For each of the sections in the app, add a tab to the action bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
 			// Create a tab with text corresponding to the page title defined by
@@ -83,7 +83,6 @@ public class MainActivity extends FragmentActivity implements
 		
 		Intent downloadIntent = new Intent();
 		downloadIntent.putExtra("Activity", this);
-		downloadIntent.putExtra("site", "http://feeds.mobilsiden.dk/MobilsidendkNyhedsoversigt?format=xml");
 		XMLDownloader xmlDownloader = new XMLDownloader();
 		xmlDownloader.execute(downloadIntent);
 	}

@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ public class NyhederFragment extends ListFragment {
 	private ArrayList newsHeadlines;
 	private ArrayAdapter adapter;
 	private BroadcastReceiver updateReciever;
+	private ListView newsList;
 
 	public NyhederFragment() {
 	}
@@ -41,7 +44,7 @@ public class NyhederFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		ListView newsList = new ListView(getActivity());
+		newsList = new ListView(getActivity());
 		newsList.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		newsList.setId(R.id.list);
 		DatabaseHelper dbConn = new DatabaseHelper(getActivity());
@@ -53,28 +56,32 @@ public class NyhederFragment extends ListFragment {
 		}
 		
 		adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, newsHeadlines);
+		
+		newsList.setAdapter(adapter);
 
-		setListAdapter(adapter);
-
-		updateReciever = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				// TODO Auto-generated method stub
-				Log.d(TAG,"Nyheder broadcast recieved");
-				DatabaseHelper dbConn = new DatabaseHelper(getActivity());
-				newsItems = dbConn.getAllItemsFromWebTv();
-				for(Item i : newsItems){
-					newsHeadlines.add(i.getTitle());
-				}
-				adapter.notifyDataSetChanged();
-				dbConn.close();
-			}
-		};
+		newsList.setOnItemClickListener(new OnItemClickListener() {
+		    @Override
+		    public void onItemClick(AdapterView<?> parent, View view,
+		              int position, long id) {
+		        Log.i("debug", "single click");
+		    }
+		});
 		
 		dbConn.close();
 		
 		getActivity().registerReceiver(updateReciever, new IntentFilter("ArticlesUpdated"));
 		return newsList;
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id)
+	{
+		super.onListItemClick(l, v, position, id);
+		DatabaseHelper dbConn = new DatabaseHelper(getActivity());
+	    String link = dbConn.getLinkFromNews((String) newsList.getItemAtPosition(position));
+
+		Intent intent = new Intent(getActivity(), WebViewer.class);
+		intent.putExtra("link", link);
+		startActivity(intent);
 	}
 }

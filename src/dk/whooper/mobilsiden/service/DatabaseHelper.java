@@ -116,74 +116,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		db.close(); // Closing database connection
 	}
 
-	// Getting All Items
-	public List<Item> getAllItems() {
-		List<Item> itemList = new ArrayList<Item>();
-		String selectQuery = "SELECT  * FROM " + "news";
-
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-
-		// looping through all rows and adding to list
-		if (cursor.moveToFirst()) {
-			do {
-				Item item = new Item();
-				item.setTitle(cursor.getString(1));
-				item.setLink(cursor.getString(2));
-				item.setDescription(cursor.getString(3));
-				item.setComments(cursor.getString(4));
-				item.setAuthor(cursor.getString(5));
-				item.setPubDate(cursor.getString(6));
-
-				// Adding item to list
-				itemList.add(item);
-			} while (cursor.moveToNext());
-		}
-
-		selectQuery = "SELECT  * FROM " + "reviews";
-
-		cursor = db.rawQuery(selectQuery, null);
-
-		// looping through all rows and adding to list
-		if (cursor.moveToFirst()) {
-			do {
-				Item item = new Item();
-				item.setTitle(cursor.getString(1));
-				item.setLink(cursor.getString(2));
-				item.setDescription(cursor.getString(3));
-				item.setComments(cursor.getString(4));
-				item.setAuthor(cursor.getString(5));
-				item.setPubDate(cursor.getString(6));
-
-				// Adding item to list
-				itemList.add(item);
-			} while (cursor.moveToNext());
-		}
-
-		selectQuery = "SELECT  * FROM " + "webtv";
-
-		cursor = db.rawQuery(selectQuery, null);
-
-		// looping through all rows and adding to list
-		if (cursor.moveToFirst()) {
-			do {
-				Item item = new Item();
-				item.setTitle(cursor.getString(1));
-				item.setLink(cursor.getString(2));
-				item.setDescription(cursor.getString(3));
-				item.setComments(cursor.getString(4));
-				item.setAuthor(cursor.getString(5));
-				item.setPubDate(cursor.getString(6));
-
-				// Adding item to list
-				itemList.add(item);
-			} while (cursor.moveToNext());
-		}
-
-		// return item list
-		return itemList;
-	}
-
 	public List<Item> getAllItemsFromNews() {
 		List<Item> itemList = new ArrayList<Item>();
 		String selectQuery = "SELECT  * FROM " + "news";
@@ -257,6 +189,48 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 			} while (cursor.moveToNext());
 		}
 		return itemList;
+	}
+
+	public String getLinkFromWebTv(String title){
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT "+ KEY_LINK +" FROM webtv WHERE " + KEY_TITLE + "= '" + title + "'", null);
+		if (cursor != null ) {
+			if  (cursor.moveToFirst()) {
+				return cursor.getString(cursor.getColumnIndex(KEY_LINK));
+			}else{
+				return null;
+			}
+		}else{
+			return null;
+		}
+	}
+	
+	public String getLinkFromNews(String title){
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT "+ KEY_LINK +" FROM news WHERE " + KEY_TITLE + "= '" + title + "'", null);
+		if (cursor != null ) {
+			if  (cursor.moveToFirst()) {
+				return cursor.getString(cursor.getColumnIndex(KEY_LINK));
+			}else{
+				return null;
+			}
+		}else{
+			return null;
+		}
+	}
+	
+	public String getLinkFromReviews(String title){
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT "+ KEY_LINK +" FROM reviews WHERE " + KEY_TITLE + "= '" + title + "'", null);
+		if (cursor != null ) {
+			if  (cursor.moveToFirst()) {
+				return cursor.getString(cursor.getColumnIndex(KEY_LINK));
+			}else{
+				return null;
+			}
+		}else{
+			return null;
+		}
 	}
 
 	// Getting Items Count
