@@ -98,7 +98,7 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
 		Log.d(TAG,"On post execute");
 		
 		XMLParser xmlParser = new XMLParser(context);
-		xmlParser.run();
+		xmlParser.execute();
 	}
 
 	@Override

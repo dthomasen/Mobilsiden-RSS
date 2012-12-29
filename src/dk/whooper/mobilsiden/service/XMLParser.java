@@ -14,9 +14,10 @@ import dk.whooper.mobilsiden.business.Item;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
-public class XMLParser implements Runnable{
+public class XMLParser extends AsyncTask<Void, Void, Void>{
 
 	private Context context;
 	private static final String TAG="XMLParser";
@@ -28,24 +29,25 @@ public class XMLParser implements Runnable{
 		this.context = context;
 	}
 
-	public void run(){
+	@Override
+	protected Void doInBackground(Void... params) {
 		Log.d(TAG, "Service started");
 		try {
 			fIn = context.openFileInput("newsRSS.xml");
 			items = parse(fIn);
-			
+
 			writeToDatabase(items);
-			
+
 			fIn = context.openFileInput("webTvRSS.xml");
 			items = parse(fIn);
-			
+
 			writeToDatabase(items);
-			
+
 			fIn = context.openFileInput("reviewsRSS.xml");
 			items = parse(fIn);
-			
+
 			writeToDatabase(items);
-			
+
 		} catch (FileNotFoundException e) {
 			Log.d(TAG,"Filenotfound exception");
 		} catch (XmlPullParserException e) {
@@ -55,12 +57,13 @@ public class XMLParser implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-
+		
+		return null;
 	}
-	
+
 	public void writeToDatabase(List<Item> items){
 		DatabaseHelper dbConn = new DatabaseHelper(context);
-		
+
 		for(Item i : items){
 			if(i.getComments().contains("web-tv")){
 				Log.d(TAG,"Adding web tv");
