@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.R.layout;
 import dk.whooper.mobilsiden.R.menu;
+import dk.whooper.mobilsiden.service.WebScraper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -73,13 +74,18 @@ public class WebViewer extends Activity {
 
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
 		if(settings.getString("user_agent", "Mobil").equals("Mobil")){
-			link = link.substring(24);
-			link = "http://mobilsiden.mobi"+link;
-			webView.getSettings().setUserAgentString("Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19");
+			WebScraper webScraper = new WebScraper();
+			try {
+				webView.loadDataWithBaseURL("not needed", webScraper.execute(link).get(),"text/html", "iso-8859-1", "");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
 		}else{
 			webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20120427 Firefox/15.0a1");
+			webView.loadUrl(link);
 		}
-		webView.loadUrl(link);
 	}
 
 	@Override
