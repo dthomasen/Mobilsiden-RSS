@@ -7,6 +7,7 @@ import dk.whooper.mobilsiden.service.SectionsPagerAdapter;
 import dk.whooper.mobilsiden.service.XMLDownloader;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -86,10 +87,6 @@ ActionBar.TabListener, Serializable{
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-		Log.d(TAG ,"SETTINGS ER NU!!!! :D "+pref.getString("browser_settings", "Mobil"));
 		
 		Intent downloadIntent = new Intent();
 		downloadIntent.putExtra("Activity", this);
@@ -109,16 +106,12 @@ ActionBar.TabListener, Serializable{
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.menu_settings:
-			showSettings();
+			Intent i = new Intent(this, SettingsActivity.class);
+			startActivity(i);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	private void showSettings() {
-		Intent i = new Intent(this, SettingsActivity.class);
-		startActivity(i);
 	}
 
 	@Override

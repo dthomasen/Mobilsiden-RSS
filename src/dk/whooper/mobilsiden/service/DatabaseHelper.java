@@ -193,10 +193,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 	public String getLinkFromWebTv(String title){
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery("SELECT "+ KEY_LINK +" FROM webtv WHERE " + KEY_TITLE + "= '" + title + "'", null);
+		Cursor cursor = db.rawQuery("SELECT "+ KEY_COMMENTS +" FROM webtv WHERE " + KEY_TITLE + "= '" + title + "'", null);
 		if (cursor != null ) {
 			if  (cursor.moveToFirst()) {
-				return cursor.getString(cursor.getColumnIndex(KEY_LINK));
+				String commentURL = cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
+				commentURL = commentURL.replaceAll("#comment_box", "");
+				db.close();
+				return commentURL;
 			}else{
 				return null;
 			}
@@ -207,10 +210,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	public String getLinkFromNews(String title){
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery("SELECT "+ KEY_LINK +" FROM news WHERE " + KEY_TITLE + "= '" + title + "'", null);
+		Cursor cursor = db.rawQuery("SELECT "+ KEY_COMMENTS +" FROM news WHERE " + KEY_TITLE + "= '" + title + "'", null);
 		if (cursor != null ) {
 			if  (cursor.moveToFirst()) {
-				return cursor.getString(cursor.getColumnIndex(KEY_LINK));
+				String commentURL = cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
+				commentURL = commentURL.replaceAll("#comment_box", "");
+				db.close();
+				return commentURL;
 			}else{
 				return null;
 			}
@@ -221,10 +227,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	
 	public String getLinkFromReviews(String title){
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery("SELECT "+ KEY_LINK +" FROM reviews WHERE " + KEY_TITLE + "= '" + title + "'", null);
+		Cursor cursor = db.rawQuery("SELECT "+ KEY_COMMENTS +" FROM reviews WHERE " + KEY_TITLE + "= '" + title + "'", null);
 		if (cursor != null ) {
 			if  (cursor.moveToFirst()) {
-				return cursor.getString(cursor.getColumnIndex(KEY_LINK));
+				String commentURL = cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
+				commentURL = commentURL.replaceAll("#comment_box", "");
+				db.close();
+				return commentURL;
 			}else{
 				return null;
 			}

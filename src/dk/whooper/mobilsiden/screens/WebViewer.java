@@ -1,10 +1,31 @@
 package dk.whooper.mobilsiden.screens;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.R.layout;
 import dk.whooper.mobilsiden.R.menu;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -18,6 +39,8 @@ public class WebViewer extends Activity {
 
 	private WebView webView;
 	private Activity activity = this;
+	private static final String TAG = "WebViewer";
+	private String link;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,23 +56,29 @@ public class WebViewer extends Activity {
 		setContentView(R.layout.activity_web_viewer);
 
 
-		String link = getIntent().getExtras().getString("link");
+		link = getIntent().getExtras().getString("link");
 		webView = (WebView) findViewById(R.id.webView1);
 
-		WebSettings webSettings = webView.getSettings();
-		webSettings.setBuiltInZoomControls(true);
-		webSettings.setJavaScriptEnabled(true);
-		webSettings.setUserAgentString("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");
+
+		webView.getSettings().setBuiltInZoomControls(true);
+		webView.getSettings().setJavaScriptEnabled(true);
 
 		webView.setWebChromeClient(new WebChromeClient() {
 			public void onProgressChanged(WebView view, int progress) {
-				// Activities and WebViews measure progress with different scales.
-				// The progress meter will automatically disappear when we reach 100%
 				activity.setProgress(progress * 100);
 			}
 		});
 
 		webView.setWebViewClient(new Callback());
+
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
+		if(settings.getString("user_agent", "Mobil").equals("Mobil")){
+			link = link.substring(24);
+			link = "http://mobilsiden.mobi"+link;
+			webView.getSettings().setUserAgentString("Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19");
+		}else{
+			webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20120427 Firefox/15.0a1");
+		}
 		webView.loadUrl(link);
 	}
 
@@ -62,6 +91,7 @@ public class WebViewer extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			// This ID represents the Home or Up button. In the case of this
@@ -73,10 +103,15 @@ public class WebViewer extends Activity {
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+		case R.id.menu_settings:
+			Intent i = new Intent(this, SettingsActivity.class);
+			startActivity(i);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
 	}
-
+	
 	private class Callback extends WebViewClient{  //HERE IS THE MAIN CHANGE. 
 
 		@Override
@@ -85,5 +120,4 @@ public class WebViewer extends Activity {
 		}
 
 	}
-
 }

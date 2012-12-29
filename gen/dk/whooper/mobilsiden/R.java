@@ -9,13 +9,7 @@ package dk.whooper.mobilsiden;
 
 public final class R {
     public static final class array {
-        /**  Strings related to Settings 
- Example General settings 
- Example settings for Data & Sync 
- Example settings for Notifications 
-         */
-        public static final int userAgent=0x7f060000;
-        public static final int userAgentValues=0x7f060001;
+        public static final int user_agent=0x7f060000;
     }
     public static final class attr {
     }

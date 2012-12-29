@@ -87,7 +87,6 @@ public class NyhederFragment extends ListFragment {
 		super.onListItemClick(l, v, position, id);
 		DatabaseHelper dbConn = new DatabaseHelper(getActivity());
 	    String link = dbConn.getLinkFromNews((String) newsList.getItemAtPosition(position));
-
 		Intent intent = new Intent(getActivity(), WebViewer.class);
 		intent.putExtra("link", link);
 		startActivity(intent);
