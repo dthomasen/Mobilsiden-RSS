@@ -7,35 +7,50 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.support.v4.app.NavUtils;
 
 public class WebViewer extends Activity {
-	
+
 	private WebView webView;
+	private Activity activity = this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
+		getWindow().requestFeature(Window.FEATURE_PROGRESS);
 		setContentView(R.layout.activity_web_viewer);
+
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_web_viewer);
-		
+
+
 		String link = getIntent().getExtras().getString("link");
 		webView = (WebView) findViewById(R.id.webView1);
-		
-		WebSettings webSettings = webView.getSettings();
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setUserAgentString(System.getProperty( "http.agent" ));
 
-        webView.setWebViewClient(new Callback());  //HERE IS THE MAIN CHANGE
-        webView.loadUrl(link);
+		WebSettings webSettings = webView.getSettings();
+		webSettings.setBuiltInZoomControls(true);
+		webSettings.setJavaScriptEnabled(true);
+		webSettings.setUserAgentString(System.getProperty( "http.agent" ));
+
+		webView.setWebChromeClient(new WebChromeClient() {
+			public void onProgressChanged(WebView view, int progress) {
+				// Activities and WebViews measure progress with different scales.
+				// The progress meter will automatically disappear when we reach 100%
+				activity.setProgress(progress * 100);
+			}
+		});
+
+		webView.setWebViewClient(new Callback());
+		webView.loadUrl(link);
 	}
 
 	@Override
@@ -61,14 +76,14 @@ public class WebViewer extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private class Callback extends WebViewClient{  //HERE IS THE MAIN CHANGE. 
 
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            return (false);
-        }
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			return (false);
+		}
 
-    }
+	}
 
 }
