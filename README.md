@@ -11,14 +11,14 @@
 
 <h3>Installation:</h3>
 <h4>Måde 1:</h4>
-Download APK filen: https://github.com/whooper90/Mobilsi...k.apk?raw=true
-Kopier filen over på enheden
-Find filen med en filbrowser og installer den
+- Download APK filen: https://github.com/whooper90/Mobilsiden-RSS/blob/master/bin/Mobilsiden.dk.apk?raw=true
+- Kopier filen over på enheden
+- Find filen med en filbrowser og installer den
 <h4>Måde 2 (Hvis du har ADB sat op):</h4>
-Download APK filen: https://github.com/whooper90/Mobilsi...k.apk?raw=true
-Åben en kommandoprompt
-Browse til filen
-Skriv "adb install Mobilsiden.dk.apk"
+- Download APK filen: https://github.com/whooper90/Mobilsiden-RSS/blob/master/bin/Mobilsiden.dk.apk?raw=true
+- Åben en kommandopromp
+- Browse til filen <br />
+- Skriv "adb install Mobilsiden.dk.apk"
 
 
 <h3>Issues/Kommende features:</h3>
