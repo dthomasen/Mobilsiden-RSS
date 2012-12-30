@@ -67,6 +67,23 @@ public class NyhederFragment extends ListFragment {
 		    }
 		});
 		
+		updateReciever = new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// TODO Auto-generated method stub
+				Log.d(TAG,"WebTV broadcast recieved");
+				DatabaseHelper dbConn = new DatabaseHelper(getActivity());
+				newsItems = dbConn.getAllItemsFromWebTv();
+				for(Item i : newsItems){
+					newsHeadlines.add(i.getTitle());
+				}
+				adapter.notifyDataSetChanged();
+				dbConn.close();
+			}
+		};
+
+		
 		dbConn.close();
 		
 		getActivity().registerReceiver(updateReciever, new IntentFilter("ArticlesUpdated"));
@@ -87,7 +104,7 @@ public class NyhederFragment extends ListFragment {
 		super.onListItemClick(l, v, position, id);
 		DatabaseHelper dbConn = new DatabaseHelper(getActivity());
 	    String link = dbConn.getLinkFromNews((String) newsList.getItemAtPosition(position));
-		Intent intent = new Intent(getActivity(), WebViewer.class);
+		Intent intent = new Intent(getActivity(), ArticleViewer.class);
 		intent.putExtra("link", link);
 		startActivity(intent);
 	}

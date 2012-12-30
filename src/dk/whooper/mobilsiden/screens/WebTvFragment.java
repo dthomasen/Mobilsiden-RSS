@@ -97,7 +97,7 @@ public class WebTvFragment extends ListFragment{
 		DatabaseHelper dbConn = new DatabaseHelper(getActivity());
 		String link = dbConn.getLinkFromWebTv((String) webtvList.getItemAtPosition(position));
 
-		Intent intent = new Intent(getActivity(), WebViewer.class);
+		Intent intent = new Intent(getActivity(), ArticleViewer.class);
 		intent.putExtra("link", link);
 		startActivity(intent);
 	}

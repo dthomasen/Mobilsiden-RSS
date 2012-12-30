@@ -81,7 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public void addItemToReviewsDB(Item item) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		Cursor cursor = db.rawQuery("SELECT * FROM news WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
+		Cursor cursor = db.rawQuery("SELECT * FROM reviews WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
 		if (cursor.getCount() == 0){
 			ContentValues values = new ContentValues();
 			values.put(KEY_TITLE, item.getTitle());
@@ -100,7 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public void addItemToWebTVDB(Item item) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		Cursor cursor = db.rawQuery("SELECT * FROM news WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
+		Cursor cursor = db.rawQuery("SELECT * FROM webtv WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
 		if (cursor.getCount() == 0){
 			ContentValues values = new ContentValues();
 			values.put(KEY_TITLE, item.getTitle());

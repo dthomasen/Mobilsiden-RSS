@@ -30,13 +30,22 @@
             android:enabled="true" />
 
         <activity
-            android:name="dk.whooper.mobilsiden.screens.WebViewer"
+            android:name="dk.whooper.mobilsiden.screens.ArticleViewer"
             android:label="@string/title_activity_web_viewer"
             android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="dk.whooper.mobilsiden.screens.MainActivity" />
         </activity>
+        <activity
+            android:name="dk.whooper.mobilsiden.screens.CommentsViewer"
+            android:label="@string/title_activity_web_viewer"
+            android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="dk.whooper.mobilsiden.screens.MainActivity" />
+        </activity>
+        
         <activity
             android:name="dk.whooper.mobilsiden.screens.SettingsActivity"
             android:label="@string/title_activity_settings"
