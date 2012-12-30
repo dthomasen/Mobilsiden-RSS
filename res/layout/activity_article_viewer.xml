@@ -18,4 +18,13 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/commentsicon" />
 
+    <ImageButton
+        android:id="@+id/youtubeButton"
+        android:layout_width="70dip"
+        android:layout_height="70dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/youtubeicon"
+        android:visibility="invisible" />
+
 </RelativeLayout>

@@ -109,6 +109,12 @@ ActionBar.TabListener, Serializable{
 			Intent i = new Intent(this, SettingsActivity.class);
 			startActivity(i);
 			return true;
+		case R.id.menu_refresh:
+			Intent downloadIntent = new Intent();
+			downloadIntent.putExtra("Activity", this);
+			XMLDownloader xmlDownloader = new XMLDownloader();
+			xmlDownloader.execute(downloadIntent);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

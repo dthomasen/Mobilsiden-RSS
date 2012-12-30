@@ -24,6 +24,7 @@ public class ArticleScraper extends AsyncTask<String, Void, String>{
 
 	private static final String TAG = "ArticleScraper";
 	private String html;
+	private String youtubeLink;
 
 	@Override
 	protected String doInBackground(String... params) {
@@ -61,12 +62,17 @@ public class ArticleScraper extends AsyncTask<String, Void, String>{
 		        if(element.tagName().equals("h1")){
 		        	String oldHeader = element.html();
 		        	String oldHeaderWithoutDoubleSpace = oldHeader.trim().replaceAll(" +", " ");
-		        	Log.d(TAG,"Before: "+oldHeader+" after: "+oldHeaderWithoutDoubleSpace);
 		        	element.html(oldHeaderWithoutDoubleSpace);
+		        }
+		        if(element.tagName().equals("iframe")){
+		        	if(element.attr("src").contains("youtube")){
+		        		youtubeLink = element.attr("src");
+		        	}
 		        }
 		    }
 			Elements articleContainer = document.select("div.article");
-			
+			articleContainer.prepend(youtubeLink);
+			Log.d(TAG,articleContainer.html());
 			html = articleContainer.html();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

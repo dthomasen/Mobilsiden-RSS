@@ -1,7 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string-array name="user_agent">
-        <item>Mobil</item>
-        <item>Computer</item>
+        <item>Mobil-optimeret</item>
+        <item>Computer-version</item>
     </string-array>
     <string name="title_activity_settings">Indstillinger</string>
 

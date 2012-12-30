@@ -6,7 +6,8 @@
     <string name="title_section2">Anmeldelser</string>
     <string name="title_section1">Nyheder</string>
     <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
+    <string name="menu_settings">Indstillinger</string>
     <string name="title_activity_web_viewer">Mobilsiden.dk</string>
+    <string name="menu_refresh">Opdater</string>
 
 </resources>

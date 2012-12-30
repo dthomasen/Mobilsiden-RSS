@@ -5,9 +5,9 @@
         android:title="Browser indstillinger" >
         <ListPreference 
             android:key="user_agent"
-            android:title="User agent"
-            android:summary="Hvilken version af Mobilsiden.dk vil du se"
-            android:defaultValue="Computer" 
+            android:title="Vælg Mobilsiden.dk version"
+            android:summary=""
+            android:defaultValue="Mobil-optimeret" 
             android:entries="@array/user_agent"
             android:entryValues="@array/user_agent"
         /> 

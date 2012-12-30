@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -24,6 +25,7 @@ import dk.whooper.mobilsiden.R.menu;
 import dk.whooper.mobilsiden.service.ArticleScraper;
 import dk.whooper.mobilsiden.service.CommentsScraper;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -56,6 +58,7 @@ public class ArticleViewer extends Activity implements OnClickListener{
 	private Activity activity = this;
 	private static final String TAG = "WebViewer";
 	private String link;
+	private String youtubeLink;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +77,6 @@ public class ArticleViewer extends Activity implements OnClickListener{
 		link = getIntent().getExtras().getString("link");
 		webView = (WebView) findViewById(R.id.webView1);
 
-		ImageButton commentsButton = (ImageButton) findViewById(R.id.commentsButton);
-		commentsButton.setOnClickListener(this);
-
 		webView.getSettings().setJavaScriptEnabled(true);
 
 		webView.setWebChromeClient(new WebChromeClient() {
@@ -88,15 +88,31 @@ public class ArticleViewer extends Activity implements OnClickListener{
 		webView.setWebViewClient(new Callback());
 
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);  
-		if(settings.getString("user_agent", "Mobil").equals("Mobil")){
+		if(settings.getString("user_agent", "Mobil-optimeret").equals("Mobil-optimeret")){
 			ArticleScraper articleScraper = new ArticleScraper();
 			CommentsScraper commentsScraper = new CommentsScraper();
+			ImageButton commentsButton = (ImageButton) findViewById(R.id.commentsButton);
+			ImageButton youtube = (ImageButton) findViewById(R.id.youtubeButton);
+			commentsButton.setOnClickListener(this);
+			youtube.setOnClickListener(this);
 			try {
 				webView.setHorizontalScrollBarEnabled(false);
 				webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+				String article = articleScraper.execute(link).get();
+
+				if(article.contains("http://www.youtube.com")){
+					String[] splitArticle = article.split(" ", 2);
+					youtubeLink = splitArticle[0];
+					article = splitArticle[1];
+					
+					youtube.setVisibility(1);
+				}else{
+					youtube.setVisibility(0);
+				}
+
 				String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
 				String end = "</body></html>";
-				webView.loadData(start+ articleScraper.execute(link).get() + end,"text/html; charset=UTF-8", null);
+				webView.loadData(start+ article + end,"text/html; charset=UTF-8", null);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {
@@ -139,9 +155,15 @@ public class ArticleViewer extends Activity implements OnClickListener{
 	}
 	@Override
 	public void onClick(View v) {
-		Intent i = new Intent(this,CommentsViewer.class);
-		i.putExtra("link", link);
-		startActivity(i);
+		switch(v.getId()){
+		case R.id.commentsButton:
+			Intent i = new Intent(this,CommentsViewer.class);
+			i.putExtra("link", link);
+			startActivity(i);
+			break;
+		case R.id.youtubeButton:
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink)));
+		}
 	}
 
 	private class Callback extends WebViewClient{ 
