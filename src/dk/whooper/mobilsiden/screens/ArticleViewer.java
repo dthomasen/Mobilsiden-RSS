@@ -105,9 +105,9 @@ public class ArticleViewer extends Activity implements OnClickListener{
 					youtubeLink = splitArticle[0];
 					article = splitArticle[1];
 					
-					youtube.setVisibility(1);
+					youtube.setVisibility(View.VISIBLE);
 				}else{
-					youtube.setVisibility(0);
+					youtube.setVisibility(View.INVISIBLE);
 				}
 
 				String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
