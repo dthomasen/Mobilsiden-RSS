@@ -32,9 +32,6 @@ public class ArticleScraper extends AsyncTask<String, Void, String>{
 		try {
 			Document document = Jsoup.parse(new URL(params[0]).openStream(), "ISO-8859-1", params[0]);
 			for (Element element : document.select("*")) {
-				if (!element.hasText() && element.isBlock()) {
-					element.remove();
-				}
 				if(element.className().equals("paragraph_banner")){
 					element.remove();
 				}
@@ -59,14 +56,20 @@ public class ArticleScraper extends AsyncTask<String, Void, String>{
 				if(element.className().equals("far_top")){
 					element.remove();
 				}
+
 				if(element.tagName().equals("h1")){
 					String oldHeader = element.html();
 					String oldHeaderWithoutDoubleSpace = oldHeader.trim().replaceAll(" +", " ");
 					element.html(oldHeaderWithoutDoubleSpace);
 				}
 				if(element.tagName().equals("iframe")){
+					Boolean youtubeFound = false;
 					if(element.attr("src").contains("youtube")){
 						youtubeLink = element.attr("src");
+						youtubeFound = true;
+					}
+					if(youtubeFound){
+						element.remove();
 					}
 				}
 			}
