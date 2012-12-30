@@ -83,12 +83,13 @@ public class CommentsViewer extends Activity{
 		});
 
 		webView.setWebViewClient(new Callback());
-		ArticleScraper articleScraper = new ArticleScraper();
 		CommentsScraper commentsScraper = new CommentsScraper();
 		try {
 			webView.setHorizontalScrollBarEnabled(false);
 			webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-			webView.loadDataWithBaseURL("not needed", commentsScraper.execute(link).get(),"text/html", "iso-8859-1", "");
+			String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
+			String end = "</body></html>";
+			webView.loadData(start+ commentsScraper.execute(link).get() + end,"text/html; charset=UTF-8", null);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {

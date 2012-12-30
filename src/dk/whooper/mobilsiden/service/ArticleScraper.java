@@ -58,6 +58,12 @@ public class ArticleScraper extends AsyncTask<String, Void, String>{
 		        if(element.className().equals("far_top")){
 		        	element.remove();
 		        }
+		        if(element.tagName().equals("h1")){
+		        	String oldHeader = element.html();
+		        	String oldHeaderWithoutDoubleSpace = oldHeader.trim().replaceAll(" +", " ");
+		        	Log.d(TAG,"Before: "+oldHeader+" after: "+oldHeaderWithoutDoubleSpace);
+		        	element.html(oldHeaderWithoutDoubleSpace);
+		        }
 		    }
 			Elements articleContainer = document.select("div.article");
 			

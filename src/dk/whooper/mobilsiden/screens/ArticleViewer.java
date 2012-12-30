@@ -94,7 +94,9 @@ public class ArticleViewer extends Activity implements OnClickListener{
 			try {
 				webView.setHorizontalScrollBarEnabled(false);
 				webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-				webView.loadDataWithBaseURL("not needed", articleScraper.execute(link).get(),"text/html", "ISO-8859-1", "");
+				String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
+				String end = "</body></html>";
+				webView.loadData(start+ articleScraper.execute(link).get() + end,"text/html; charset=UTF-8", null);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {
