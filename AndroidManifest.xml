@@ -1,59 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dk.whooper.mobilsiden"
-    android:versionCode="1"
-    android:versionName="1.0" >
+          package="dk.whooper.mobilsiden"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <uses-sdk
-        android:minSdkVersion="11"
-        android:targetSdkVersion="16" />
+            android:minSdkVersion="11"
+            android:targetSdkVersion="16"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="true" >
+            android:allowBackup="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:hardwareAccelerated="true">
         <activity
-            android:name="dk.whooper.mobilsiden.screens.MainActivity"
-            android:label="@string/app_name" >
+                android:name="dk.whooper.mobilsiden.screens.MainActivity"
+                android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <service
-            android:name="dk.whooper.mobilsiden.service.XMLParser"
-            android:enabled="true" />
+        <activity
+                android:name="dk.whooper.mobilsiden.screens.ArticleViewer"
+                android:label="@string/title_activity_web_viewer"
+                android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="dk.whooper.mobilsiden.screens.MainActivity"/>
+        </activity>
+        <activity
+                android:name="dk.whooper.mobilsiden.screens.CommentsViewer"
+                android:label="@string/title_activity_web_viewer"
+                android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="dk.whooper.mobilsiden.screens.MainActivity"/>
+        </activity>
 
         <activity
-            android:name="dk.whooper.mobilsiden.screens.ArticleViewer"
-            android:label="@string/title_activity_web_viewer"
-            android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity" >
+                android:name="dk.whooper.mobilsiden.screens.SettingsActivity"
+                android:label="@string/title_activity_settings"
+                android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity">
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="dk.whooper.mobilsiden.screens.MainActivity" />
-        </activity>
-        <activity
-            android:name="dk.whooper.mobilsiden.screens.CommentsViewer"
-            android:label="@string/title_activity_web_viewer"
-            android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="dk.whooper.mobilsiden.screens.MainActivity" />
-        </activity>
-        
-        <activity
-            android:name="dk.whooper.mobilsiden.screens.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="dk.whooper.mobilsiden.screens.MainActivity" />
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="dk.whooper.mobilsiden.screens.MainActivity"/>
         </activity>
     </application>
 
