@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +16,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.actionbarsherlock.app.SherlockListFragment;
 import dk.whooper.mobilsiden.business.Item;
 import dk.whooper.mobilsiden.service.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NyhederFragment extends ListFragment {
+public class NyhederFragment extends SherlockListFragment {
     private static final String TAG = "NyhederFragment";
     private List<Item> newsItems;
     private ArrayList newsHeadlines;

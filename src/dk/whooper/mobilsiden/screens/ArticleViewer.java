@@ -8,22 +8,22 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.service.ArticleScraper;
 
 import java.util.concurrent.ExecutionException;
 
-public class ArticleViewer extends Activity implements OnClickListener {
+public class ArticleViewer extends SherlockActivity implements View.OnClickListener {
 
     private final Activity activity = this;
     private static final String TAG = "WebViewer";
@@ -34,7 +34,7 @@ public class ArticleViewer extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_PROGRESS);
+        getWindow().requestFeature((int) Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_article_viewer);
 
         // Show the Up button in the action bar.
@@ -96,7 +96,7 @@ public class ArticleViewer extends Activity implements OnClickListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_web_viewer, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_web_viewer, menu);
         return true;
     }
 

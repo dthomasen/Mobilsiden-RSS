@@ -4,17 +4,17 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.service.SectionsPagerAdapter;
 import dk.whooper.mobilsiden.service.XMLDownloader;
 
 import java.io.Serializable;
 
-public class MainActivity extends FragmentActivity implements
+public class MainActivity extends SherlockFragmentActivity implements
         ActionBar.TabListener, Serializable {
 
     /**
@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
 
@@ -93,11 +93,6 @@ public class MainActivity extends FragmentActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

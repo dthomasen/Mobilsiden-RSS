@@ -1,5 +1,6 @@
 package dk.whooper.mobilsiden.service;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
 
     private static final String TAG = "XMLDownloader";
     private Context context;
+    private ProgressDialog pdia;
 
     @Override
     protected Intent doInBackground(Intent... params) {
@@ -92,10 +94,6 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
 
         XMLParser xmlParser = new XMLParser(context);
         xmlParser.execute();
-    }
-
-    @Override
-    protected void onPreExecute() {
     }
 
     @Override

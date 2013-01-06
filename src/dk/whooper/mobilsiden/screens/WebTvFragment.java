@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +13,14 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.actionbarsherlock.app.SherlockListFragment;
 import dk.whooper.mobilsiden.business.Item;
 import dk.whooper.mobilsiden.service.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebTvFragment extends ListFragment {
+public class WebTvFragment extends SherlockListFragment {
 
     private static final String TAG = "WebTVFragment";
     private BroadcastReceiver updateReciever;

@@ -6,19 +6,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.service.CommentsScraper;
 
 import java.util.concurrent.ExecutionException;
 
-public class CommentsViewer extends Activity {
+public class CommentsViewer extends SherlockActivity {
 
     private final Activity activity = this;
     private static final String TAG = "WebViewer";
@@ -27,7 +28,7 @@ public class CommentsViewer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_PROGRESS);
+        getWindow().requestFeature((int) Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_comments_viewer);
 
         // Show the Up button in the action bar.
@@ -67,7 +68,7 @@ public class CommentsViewer extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_web_viewer, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_web_viewer, menu);
         return true;
     }
 
