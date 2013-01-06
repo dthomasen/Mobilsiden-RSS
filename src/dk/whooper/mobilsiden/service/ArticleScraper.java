@@ -66,7 +66,6 @@ public class ArticleScraper extends AsyncTask<String, Void, String> {
             if (youtubeLink != null) {
                 articleContainer.prepend(youtubeLink);
             }
-            articleContainer.append("<br /><br /><br />");
             Log.d(TAG, articleContainer.html());
             html = articleContainer.html();
         } catch (IOException e) {

@@ -55,8 +55,12 @@ public class CommentsViewer extends SherlockActivity {
             webView.setHorizontalScrollBarEnabled(false);
             webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
             String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
+            String html = commentsScraper.execute(link).get();
+            if (html.equals("")) {
+                html = "<center><h3>Ingen kommentarer til artiklen</h3></center>";
+            }
             String end = "</body></html>";
-            webView.loadData(start + commentsScraper.execute(link).get() + end, "text/html; charset=UTF-8", null);
+            webView.loadData(start + html + end, "text/html; charset=UTF-8", null);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

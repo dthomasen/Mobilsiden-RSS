@@ -39,12 +39,13 @@ public class CommentsScraper extends AsyncTask<String, Void, String> {
 
             }
             Elements comments = document.select("div#tabs2");
+
             html = comments.html();
+
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
 
         return html;
     }
