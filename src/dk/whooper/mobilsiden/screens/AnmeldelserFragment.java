@@ -1,5 +1,6 @@
 package dk.whooper.mobilsiden.screens;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,7 @@ public class AnmeldelserFragment extends ListFragment {
     private List<Item> reviewsItems;
     private ArrayList reviewsHeadlines;
     private ListView reviewsList;
+    ProgressDialog progressDialog;
 
     public AnmeldelserFragment() {
     }
@@ -82,7 +84,16 @@ public class AnmeldelserFragment extends ListFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        progressDialog = ProgressDialog.show(getActivity(), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
         String link = dbConn.getLinkFromReviews((String) reviewsList.getItemAtPosition(position));

@@ -35,13 +35,6 @@ public class MainActivity extends FragmentActivity implements
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the app.        /*
-      The {@link android.support.v4.view.PagerAdapter} that will provide
-	  fragments for each of the sections. We use a
-	  {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	  will keep every loaded fragment in memory. If this becomes too memory
-	  intensive, it may be best to switch to a
-	  {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
         SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(
                 getSupportFragmentManager(), this);
 
@@ -59,7 +52,6 @@ public class MainActivity extends FragmentActivity implements
                         actionBar.setSelectedNavigationItem(position);
                     }
                 });
-
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
             // Create a tab with text corresponding to the page title defined by
