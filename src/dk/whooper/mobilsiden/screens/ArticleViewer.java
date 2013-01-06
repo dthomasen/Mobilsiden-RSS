@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageButton;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -23,12 +21,12 @@ import dk.whooper.mobilsiden.service.ArticleScraper;
 
 import java.util.concurrent.ExecutionException;
 
-public class ArticleViewer extends SherlockActivity implements View.OnClickListener {
+public class ArticleViewer extends SherlockActivity {
 
     private final Activity activity = this;
     private static final String TAG = "WebViewer";
     private String link;
-    private String youtubeLink;
+    private String youtubeLink = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +58,6 @@ public class ArticleViewer extends SherlockActivity implements View.OnClickListe
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getString("user_agent", "Mobil-optimeret").equals("Mobil-optimeret")) {
             ArticleScraper articleScraper = new ArticleScraper();
-            ImageButton commentsButton = (ImageButton) findViewById(R.id.commentsButton);
-            ImageButton youtube = (ImageButton) findViewById(R.id.youtubeButton);
-            commentsButton.setOnClickListener(this);
-            youtube.setOnClickListener(this);
             try {
                 webView.setHorizontalScrollBarEnabled(false);
                 webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
@@ -73,10 +67,7 @@ public class ArticleViewer extends SherlockActivity implements View.OnClickListe
                     String[] splitArticle = article.split(" ", 2);
                     youtubeLink = splitArticle[0];
                     article = splitArticle[1];
-
-                    youtube.setVisibility(View.VISIBLE);
-                } else {
-                    youtube.setVisibility(View.INVISIBLE);
+                    invalidateOptionsMenu();
                 }
 
                 String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
@@ -95,7 +86,15 @@ public class ArticleViewer extends SherlockActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
+        if (youtubeLink != "") {
+            menu.add(Menu.NONE, R.id.youtubeButtonBar, Menu.NONE, "Youtube").setIcon(R.drawable.youtubeicon)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+
+        menu.add(Menu.NONE, R.id.commentsButtonBar, Menu.NONE, "Comments").setIcon(R.drawable.commentsicon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
         getSupportMenuInflater().inflate(R.menu.activity_web_viewer, menu);
         return true;
     }
@@ -118,21 +117,16 @@ public class ArticleViewer extends SherlockActivity implements View.OnClickListe
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
                 return true;
+            case R.id.youtubeButtonBar:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink)));
+                return true;
+            case R.id.commentsButtonBar:
+                Intent intent = new Intent(this, CommentsViewer.class);
+                intent.putExtra("link", link);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.commentsButton:
-                Intent i = new Intent(this, CommentsViewer.class);
-                i.putExtra("link", link);
-                startActivity(i);
-                break;
-            case R.id.youtubeButton:
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(youtubeLink)));
         }
     }
 

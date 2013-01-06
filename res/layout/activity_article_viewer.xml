@@ -9,24 +9,4 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    <ImageButton
-            android:id="@+id/commentsButton"
-            android:layout_width="70dip"
-            android:layout_height="70dip"
-            android:scaleType="fitXY"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:contentDescription="@string/comments_label"
-            android:src="@drawable/commentsicon"/>
-
-    <ImageButton
-            android:id="@+id/youtubeButton"
-            android:layout_width="70dip"
-            android:layout_height="70dip"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/youtubeicon"
-            android:contentDescription="@string/youtube_label"
-            android:visibility="invisible"/>
-
 </RelativeLayout>
