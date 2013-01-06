@@ -1,6 +1,7 @@
 package dk.whooper.mobilsiden.screens;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,11 +56,18 @@ public class CommentsViewer extends SherlockActivity {
             webView.setHorizontalScrollBarEnabled(false);
             webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
             String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
-            String html = commentsScraper.execute(link).get();
-            if (html.equals("")) {
-                html = "<center><h3>Ingen kommentarer til artiklen</h3></center>";
-            }
             String end = "</body></html>";
+            String html = commentsScraper.execute(link).get();
+            if (html.equals("")) { //If no comments to the article
+                AlertDialog.Builder noCommentsPopup = new AlertDialog.Builder(this);
+
+                noCommentsPopup.setMessage("Der er endnu ingen kommentarer til denne artikel - Du kan blive den første!");
+                noCommentsPopup.setTitle("Ingen kommentarer");
+                noCommentsPopup.setPositiveButton("OK", null);
+                noCommentsPopup.setCancelable(true);
+                noCommentsPopup.create().show();
+            }
+
             webView.loadData(start + html + end, "text/html; charset=UTF-8", null);
         } catch (InterruptedException e) {
             e.printStackTrace();

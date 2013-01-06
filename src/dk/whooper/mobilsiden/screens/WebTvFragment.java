@@ -11,22 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import dk.whooper.mobilsiden.business.Item;
+import dk.whooper.mobilsiden.service.ArticleBaseAdapter;
 import dk.whooper.mobilsiden.service.DatabaseHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WebTvFragment extends SherlockListFragment {
 
     private static final String TAG = "WebTVFragment";
     private BroadcastReceiver updateReciever;
-    private ArrayAdapter<String> adapter;
+    private ArticleBaseAdapter adapter;
     private List<Item> webtvItems;
-    private ArrayList<String> webtvHeadlines;
     private static ListView webtvList;
     ProgressDialog progressDialog;
 
@@ -43,12 +41,8 @@ public class WebTvFragment extends SherlockListFragment {
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
 
         webtvItems = dbConn.getAllItemsFromWebTv();
-        webtvHeadlines = new ArrayList<String>();
-        for (Item i : webtvItems) {
-            webtvHeadlines.add(i.getTitle());
-        }
 
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, webtvHeadlines);
+        adapter = new ArticleBaseAdapter(getActivity(), webtvItems);
         webtvList.setAdapter(adapter);
 
         updateReciever = new BroadcastReceiver() {
@@ -59,9 +53,6 @@ public class WebTvFragment extends SherlockListFragment {
                 Log.d(TAG, "WebTV broadcast recieved");
                 DatabaseHelper dbConn = new DatabaseHelper(getActivity());
                 webtvItems = dbConn.getAllItemsFromWebTv();
-                for (Item i : webtvItems) {
-                    webtvHeadlines.add(i.getTitle());
-                }
                 adapter.notifyDataSetChanged();
                 dbConn.close();
             }

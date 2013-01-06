@@ -11,22 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import dk.whooper.mobilsiden.business.Item;
+import dk.whooper.mobilsiden.service.ArticleBaseAdapter;
 import dk.whooper.mobilsiden.service.DatabaseHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AnmeldelserFragment extends SherlockListFragment {
 
     private static final String TAG = "AnmeldelserFragment";
     private BroadcastReceiver updateReciever;
-    private ArrayAdapter adapter;
+    private ArticleBaseAdapter adapter;
     private List<Item> reviewsItems;
-    private ArrayList reviewsHeadlines;
     private ListView reviewsList;
     ProgressDialog progressDialog;
 
@@ -43,12 +41,8 @@ public class AnmeldelserFragment extends SherlockListFragment {
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
 
         reviewsItems = dbConn.getAllItemsFromReviews();
-        reviewsHeadlines = new ArrayList();
-        for (Item i : reviewsItems) {
-            reviewsHeadlines.add(i.getTitle());
-        }
 
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, reviewsHeadlines);
+        adapter = new ArticleBaseAdapter(getActivity(), reviewsItems);
 
         setListAdapter(adapter);
 
@@ -60,9 +54,6 @@ public class AnmeldelserFragment extends SherlockListFragment {
                 Log.d(TAG, "Anmeldelser broadcast recieved");
                 DatabaseHelper dbConn = new DatabaseHelper(getActivity());
                 reviewsItems = dbConn.getAllItemsFromReviews();
-                for (Item i : reviewsItems) {
-                    reviewsHeadlines.add(i.getTitle());
-                }
                 adapter.notifyDataSetChanged();
                 dbConn.close();
             }

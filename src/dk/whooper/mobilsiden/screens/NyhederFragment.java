@@ -12,12 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import dk.whooper.mobilsiden.business.Item;
+import dk.whooper.mobilsiden.service.ArticleBaseAdapter;
 import dk.whooper.mobilsiden.service.DatabaseHelper;
 
 import java.util.ArrayList;
@@ -27,7 +25,7 @@ public class NyhederFragment extends SherlockListFragment {
     private static final String TAG = "NyhederFragment";
     private List<Item> newsItems;
     private ArrayList newsHeadlines;
-    private ArrayAdapter adapter;
+    private ArticleBaseAdapter adapter;
     private BroadcastReceiver updateReciever;
     private ListView newsList;
     ProgressDialog progressDialog;
@@ -45,34 +43,19 @@ public class NyhederFragment extends SherlockListFragment {
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
 
         newsItems = dbConn.getAllItemsFromNews();
-        newsHeadlines = new ArrayList();
-        for (Item i : newsItems) {
-            newsHeadlines.add(i.getTitle());
-        }
 
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, newsHeadlines);
+        adapter = new ArticleBaseAdapter(getActivity(), newsItems);
 
         newsList.setAdapter(adapter);
-
-        newsList.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Log.i("debug", "single click");
-            }
-        });
 
         updateReciever = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context context, Intent intent) {
                 // TODO Auto-generated method stub
-                Log.d(TAG, "WebTV broadcast recieved");
+                Log.d(TAG, "Nyheder broadcast recieved");
                 DatabaseHelper dbConn = new DatabaseHelper(getActivity());
-                newsItems = dbConn.getAllItemsFromWebTv();
-                for (Item i : newsItems) {
-                    newsHeadlines.add(i.getTitle());
-                }
+                newsItems = dbConn.getAllItemsFromNews();
                 adapter.notifyDataSetChanged();
                 dbConn.close();
             }
