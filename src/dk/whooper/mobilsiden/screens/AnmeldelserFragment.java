@@ -87,10 +87,11 @@ public class AnmeldelserFragment extends SherlockListFragment {
         progressDialog = ProgressDialog.show(getActivity(), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
-        String link = dbConn.getLinkFromReviews((String) reviewsList.getItemAtPosition(position));
+        Item item = (Item) reviewsList.getItemAtPosition(position);
 
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
-        intent.putExtra("link", link);
+        intent.putExtra("item", item);
+
         startActivity(intent);
     }
 }

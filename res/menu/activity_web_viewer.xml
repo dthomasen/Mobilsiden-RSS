@@ -13,4 +13,8 @@
             android:id="@+id/commentsButtonBar"
             android:visible="false"
             />
+    <item
+            android:id="@+id/facebookButtonBar"
+            android:visible="false"
+            />
 </menu>

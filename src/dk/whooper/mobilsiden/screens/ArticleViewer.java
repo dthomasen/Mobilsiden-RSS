@@ -17,7 +17,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import dk.whooper.mobilsiden.R;
+import dk.whooper.mobilsiden.business.Item;
 import dk.whooper.mobilsiden.service.ArticleScraper;
+import dk.whooper.mobilsiden.service.FacebookWrapper;
 
 import java.util.concurrent.ExecutionException;
 
@@ -25,8 +27,12 @@ public class ArticleViewer extends SherlockActivity {
 
     private final Activity activity = this;
     private static final String TAG = "WebViewer";
+    private Item item;
     private String link;
+    private String description;
     private String youtubeLink = "";
+    private String title;
+    private FacebookWrapper fbWrapper = new FacebookWrapper("487027081336289");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +48,10 @@ public class ArticleViewer extends SherlockActivity {
         setContentView(R.layout.activity_article_viewer);
 
 
-        link = getIntent().getExtras().getString("link");
+        item = (Item) getIntent().getExtras().getSerializable("item");
+        description = item.getDescription();
+        title = item.getTitle();
+        link = item.getLink();
         WebView webView = (WebView) findViewById(R.id.webView1);
 
         webView.getSettings().setJavaScriptEnabled(true);
@@ -85,6 +94,12 @@ public class ArticleViewer extends SherlockActivity {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fbWrapper.onComplete(requestCode, resultCode, data);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         if (youtubeLink != "") {
@@ -93,6 +108,9 @@ public class ArticleViewer extends SherlockActivity {
         }
 
         menu.add(Menu.NONE, R.id.commentsButtonBar, Menu.NONE, "Comments").setIcon(R.drawable.commentsicon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(Menu.NONE, R.id.facebookButtonBar, Menu.NONE, "Facebook").setIcon(R.drawable.facebook_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         getSupportMenuInflater().inflate(R.menu.activity_web_viewer, menu);
@@ -124,6 +142,10 @@ public class ArticleViewer extends SherlockActivity {
                 Intent intent = new Intent(this, CommentsViewer.class);
                 intent.putExtra("link", link);
                 startActivity(intent);
+                return true;
+            case R.id.facebookButtonBar:
+                Log.d(TAG, "Facebook button presed");
+                fbWrapper.share(this, link, "", title, description);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

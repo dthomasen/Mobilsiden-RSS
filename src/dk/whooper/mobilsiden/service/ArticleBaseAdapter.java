@@ -37,8 +37,8 @@ public class ArticleBaseAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
-        return itemArray.get(position).getTitle();
+    public Item getItem(int position) {
+        return itemArray.get(position);
     }
 
     @Override

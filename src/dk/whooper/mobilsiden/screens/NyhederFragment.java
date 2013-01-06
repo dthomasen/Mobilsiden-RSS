@@ -89,9 +89,11 @@ public class NyhederFragment extends SherlockListFragment {
         progressDialog = ProgressDialog.show(getActivity(), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
-        String link = dbConn.getLinkFromNews((String) newsList.getItemAtPosition(position));
+        Item item = (Item) newsList.getItemAtPosition(position);
+
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
-        intent.putExtra("link", link);
+        intent.putExtra("item", item);
+
         startActivity(intent);
     }
 }

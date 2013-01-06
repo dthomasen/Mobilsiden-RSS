@@ -86,10 +86,11 @@ public class WebTvFragment extends SherlockListFragment {
         progressDialog = ProgressDialog.show(getActivity(), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
-        String link = dbConn.getLinkFromWebTv((String) webtvList.getItemAtPosition(position));
+        Item item = (Item) webtvList.getItemAtPosition(position);
 
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
-        intent.putExtra("link", link);
+        intent.putExtra("item", item);
+
         startActivity(intent);
     }
 }
