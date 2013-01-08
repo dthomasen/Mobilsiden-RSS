@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Mobilsiden.dk</string>
+    <string name="title_section4">Tips</string>
     <string name="title_section3">WebTV</string>
     <string name="title_section2">Anmeldelser</string>
     <string name="title_section1">Nyheder</string>

@@ -40,10 +40,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String CREATE_WEBTV_TABLE = "CREATE TABLE webtv ("
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_TITLE + " TEXT,"
                 + KEY_LINK + " TEXT," + KEY_DESCRIPTION + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_PUBDATE + " TEXT" + ")";
+        String CREATE_TIPS_TABLE = "CREATE TABLE tips ("
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_TITLE + " TEXT,"
+                + KEY_LINK + " TEXT," + KEY_DESCRIPTION + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_PUBDATE + " TEXT" + ")";
 
         db.execSQL(CREATE_NEWS_TABLE);
         db.execSQL(CREATE_REVIEWS_TABLE);
         db.execSQL(CREATE_WEBTV_TABLE);
+        db.execSQL(CREATE_TIPS_TABLE);
     }
 
     @Override
@@ -52,6 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS news");
         db.execSQL("DROP TABLE IF EXISTS reviews");
         db.execSQL("DROP TABLE IF EXISTS webtv");
+        db.execSQL("DROP TABLE IF EXISTS tips");
         // Create tables again
         onCreate(db);
     }
@@ -61,7 +66,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery("SELECT * FROM news WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
         if (cursor.getCount() == 0) {
-            Log.d("DBTEST", "Cursor is null");
             ContentValues values = new ContentValues();
             values.put(KEY_TITLE, item.getTitle());
             values.put(KEY_LINK, item.getLink());
@@ -74,6 +78,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.insert("news", null, values);
         }
 
+        db.close(); // Closing database connection
+    }
+
+    public void addItemToTipsDB(Item item) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM tips WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
+        if (cursor.getCount() == 0) {
+            ContentValues values = new ContentValues();
+            values.put(KEY_TITLE, item.getTitle());
+            values.put(KEY_LINK, item.getLink());
+            values.put(KEY_DESCRIPTION, item.getDescription());
+            values.put(KEY_COMMENTS, item.getComments());
+            values.put(KEY_AUTHOR, item.getAuthor());
+            values.put(KEY_PUBDATE, item.getPubDate());
+
+            // Inserting Row
+            db.insert("tips", null, values);
+        }
         db.close(); // Closing database connection
     }
 
@@ -190,6 +213,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return itemList;
     }
 
+    public List<Item> getAllItemsFromTips() {
+        List<Item> itemList = new ArrayList<Item>();
+        String selectQuery = "SELECT  * FROM " + "tips";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Item item = new Item();
+                item.setTitle(cursor.getString(1));
+                item.setLink(cursor.getString(2));
+                item.setDescription(cursor.getString(3));
+                item.setComments(cursor.getString(4));
+                item.setAuthor(cursor.getString(5));
+                item.setPubDate(cursor.getString(6));
+
+                // Adding item to list
+                itemList.add(item);
+            } while (cursor.moveToNext());
+        }
+        return itemList;
+    }
+
     public String getLinkFromWebTv(String title) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT " + KEY_COMMENTS + " FROM webtv WHERE " + KEY_TITLE + "= '" + title + "'", null);
@@ -254,9 +302,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String countQuery3 = "SELECT  * FROM " + "webtv";
         Cursor cursor3 = db.rawQuery(countQuery3, null);
-        cursor2.close();
+        cursor3.close();
+
+        String countQuery4 = "SELECT  * FROM " + "webtv";
+        Cursor cursor4 = db.rawQuery(countQuery3, null);
+        cursor4.close();
         // return count
-        return cursor.getCount() + cursor2.getCount() + cursor3.getCount();
+        return cursor.getCount() + cursor2.getCount() + cursor3.getCount() + cursor4.getCount();
     }
 
 }

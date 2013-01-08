@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.screens.AnmeldelserFragment;
 import dk.whooper.mobilsiden.screens.NyhederFragment;
+import dk.whooper.mobilsiden.screens.TipsFragment;
 import dk.whooper.mobilsiden.screens.WebTvFragment;
 
 /**
@@ -31,6 +32,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return new AnmeldelserFragment();
             case 2:
                 return new WebTvFragment();
+            case 3:
+                return new TipsFragment();
             default:
                 return null;
         }
@@ -38,8 +41,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
-        return 3;
+        return 4;
     }
 
     @Override
@@ -51,6 +53,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return context.getString(R.string.title_section2).toUpperCase();
             case 2:
                 return context.getString(R.string.title_section3).toUpperCase();
+            case 3:
+                return context.getString(R.string.title_section4).toUpperCase();
         }
         return null;
     }

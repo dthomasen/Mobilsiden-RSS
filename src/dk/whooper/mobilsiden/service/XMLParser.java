@@ -44,6 +44,11 @@ class XMLParser extends AsyncTask<Void, Void, Void> {
 
             writeToDatabase(items);
 
+            fIn = context.openFileInput("tipsRSS.xml");
+            items = parse(fIn);
+
+            writeToDatabase(items);
+
         } catch (FileNotFoundException e) {
             Log.d(TAG, "Filenotfound exception");
         } catch (XmlPullParserException e) {
@@ -67,6 +72,8 @@ class XMLParser extends AsyncTask<Void, Void, Void> {
                 dbConn.addItemToReviewsDB(i);
             } else if (i.getComments().contains("nyheder")) {
                 dbConn.addItemToNewsDB(i);
+            } else if (i.getComments().contains("tips")) {
+                dbConn.addItemToTipsDB(i);
             }
         }
         dbConn.close();

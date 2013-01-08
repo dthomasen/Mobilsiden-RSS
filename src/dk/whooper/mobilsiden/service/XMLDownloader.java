@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -29,11 +30,13 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
         String newsXml = downloadXML("http://feeds.mobilsiden.dk/MobilsidendkNyhedsoversigt?format=xml");
         String webTvXml = downloadXML("http://feeds.mobilsiden.dk/MobilsidendkAnmeldelser?format=xml");
         String reviewsXml = downloadXML("http://feeds.mobilsiden.dk/MobilsidendkWebvideo?format=xml");
+        String tipsXml = downloadXML("http://feeds.mobilsiden.dk/MobilsidendkTips?format=xml");
 
         context = (Context) params[0].getExtras().getSerializable("Activity");
         AndroidFileFunctions.writeToFile("newsRSS.xml", newsXml, context, Context.MODE_WORLD_READABLE);
         AndroidFileFunctions.writeToFile("webTvRSS.xml", webTvXml, context, Context.MODE_WORLD_READABLE);
         AndroidFileFunctions.writeToFile("reviewsRSS.xml", reviewsXml, context, Context.MODE_WORLD_READABLE);
+        AndroidFileFunctions.writeToFile("tipsRSS.xml", tipsXml, context, Context.MODE_WORLD_READABLE);
 
         return params[0];
     }
@@ -62,6 +65,7 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet request = new HttpGet(page);
         HttpResponse webServerResponse = null;
+        HttpEntity httpEntity = null;
 
         try {
             webServerResponse = httpClient.execute(request);
@@ -71,7 +75,11 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
             e.printStackTrace();
         }
 
-        HttpEntity httpEntity = webServerResponse.getEntity();
+        try {
+            httpEntity = webServerResponse.getEntity();
+        } catch (NullPointerException e) {
+            Toast.makeText(context, "Fejl i download af aritkler", Toast.LENGTH_SHORT);
+        }
         String result = "";
         if (httpEntity != null) {
             InputStream inStream;
