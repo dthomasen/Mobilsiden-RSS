@@ -78,7 +78,7 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
         try {
             httpEntity = webServerResponse.getEntity();
         } catch (NullPointerException e) {
-            Toast.makeText(context, "Fejl i download af aritkler", Toast.LENGTH_SHORT);
+            Toast.makeText(context, "Fejl i download af aritkler", Toast.LENGTH_SHORT).show();
         }
         String result = "";
         if (httpEntity != null) {
