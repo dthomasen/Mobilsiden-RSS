@@ -49,9 +49,15 @@ public class ArticleViewer extends SherlockActivity {
 
 
         item = (Item) getIntent().getExtras().getSerializable("item");
-        description = item.getDescription();
-        title = item.getTitle();
-        link = item.getLink();
+
+        if (item != null) {
+            description = item.getDescription();
+            title = item.getTitle();
+            link = item.getLink();
+        } else {
+            link = getIntent().getStringExtra("link");
+        }
+
         WebView webView = (WebView) findViewById(R.id.webView1);
 
         webView.getSettings().setJavaScriptEnabled(true);
@@ -145,7 +151,11 @@ public class ArticleViewer extends SherlockActivity {
                 return true;
             case R.id.facebookButtonBar:
                 Log.d(TAG, "Facebook button presed");
-                fbWrapper.share(this, link, "", title, description);
+                if (title != null && description != null) {
+                    fbWrapper.share(this, link, "", title, description);
+                } else {
+                    fbWrapper.share(this, link, "", "", "");
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
