@@ -34,40 +34,18 @@ class AndroidFileFunctions {
         }
     }
 
-    public static boolean appendFileValue(String fileName, String value, Context context) {
-        return writeToFile(fileName, value, context, Context.MODE_APPEND);
-    }
-
     public static boolean setFileValue(String fileName, String value, Context context) {
-        return writeToFile(fileName, value, context, Context.MODE_WORLD_READABLE);
+        return writeToFile(fileName, value, context);
     }
 
-    public static boolean writeToFile(String fileName, String value, Context context, int writeOrAppendMode) {
-
-        // just make sure it's one of the modes we support
-        if (writeOrAppendMode != Context.MODE_WORLD_READABLE && writeOrAppendMode != Context.MODE_WORLD_WRITEABLE && writeOrAppendMode != Context.MODE_APPEND) {
-            return false;
-        }
+    public static boolean writeToFile(String fileName, String value, Context context) {
 
         try {
-
-        /*
-         * We have to use the openFileOutput()-method the ActivityContext
-         * provides, to protect your file from others and This is done for
-         * security-reasons. We chose MODE_WORLD_READABLE, because we have
-         * nothing to hide in our file
-         */
-            FileOutputStream fOut = context.openFileOutput(fileName, writeOrAppendMode);
-            OutputStreamWriter osw = new OutputStreamWriter(fOut);
-
-            // Write the string to the file
-            osw.write(value);
-
-            // save and close
-            osw.flush();
-            osw.close();
-        } catch (IOException e) {
-            return false;
+            FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            fos.write(value.getBytes());
+            fos.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
 
         return true;
