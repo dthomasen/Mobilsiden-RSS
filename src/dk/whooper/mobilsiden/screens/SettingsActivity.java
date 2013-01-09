@@ -18,6 +18,8 @@ public class SettingsActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.preferences);
         getActionBar().setDisplayShowTitleEnabled(false);
 
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         //get the specified preferences using the key declared in preferences.xml
         ListPreference userAgentPref = (ListPreference) findPreference("user_agent");
 

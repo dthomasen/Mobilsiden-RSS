@@ -32,11 +32,16 @@ public class XMLDownloader extends AsyncTask<Intent, Void, Intent> {
         String reviewsXml = downloadXML("http://feeds.mobilsiden.dk/MobilsidendkWebvideo?format=xml");
         String tipsXml = downloadXML("http://feeds.mobilsiden.dk/MobilsidendkTips?format=xml");
 
+        AndroidFileFunctions.deleteFile("newsRSS.xml", context);
+        AndroidFileFunctions.deleteFile("webTvRSS.xml", context);
+        AndroidFileFunctions.deleteFile("reviewsRSS.xml", context);
+        AndroidFileFunctions.deleteFile("tipsRSS.xml", context);
+
         context = (Context) params[0].getExtras().getSerializable("Activity");
-        AndroidFileFunctions.writeToFile("newsRSS.xml", newsXml, context, Context.MODE_WORLD_READABLE);
-        AndroidFileFunctions.writeToFile("webTvRSS.xml", webTvXml, context, Context.MODE_WORLD_READABLE);
-        AndroidFileFunctions.writeToFile("reviewsRSS.xml", reviewsXml, context, Context.MODE_WORLD_READABLE);
-        AndroidFileFunctions.writeToFile("tipsRSS.xml", tipsXml, context, Context.MODE_WORLD_READABLE);
+        AndroidFileFunctions.writeToFile("newsRSS.xml", newsXml, context, Context.MODE_APPEND);
+        AndroidFileFunctions.writeToFile("webTvRSS.xml", webTvXml, context, Context.MODE_APPEND);
+        AndroidFileFunctions.writeToFile("reviewsRSS.xml", reviewsXml, context, Context.MODE_APPEND);
+        AndroidFileFunctions.writeToFile("tipsRSS.xml", tipsXml, context, Context.MODE_APPEND);
 
         return params[0];
     }

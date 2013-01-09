@@ -42,7 +42,10 @@
                 android:name="dk.whooper.mobilsiden.screens.ArticleViewer"
                 android:label="@string/title_activity_web_viewer"
                 android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity"
-                android:logo="@drawable/logonavigation">
+                android:logo="@drawable/logonavigation"
+                android:configChanges="orientation|screenSize"
+                android:hardwareAccelerated="true"
+                >
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="dk.whooper.mobilsiden.screens.MainActivity"/>
@@ -51,7 +54,9 @@
                 android:name="dk.whooper.mobilsiden.screens.CommentsViewer"
                 android:label="@string/title_activity_web_viewer"
                 android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity"
-                android:logo="@drawable/logonavigation">
+                android:logo="@drawable/logonavigation"
+                android:configChanges="orientation|screenSize"
+                >
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="dk.whooper.mobilsiden.screens.MainActivity"/>

@@ -68,7 +68,6 @@ public class MainActivity extends SherlockFragmentActivity implements
                     .setTabListener(this));
         }
 
-        Toast.makeText(this, "Opdaterer artikler...", Toast.LENGTH_LONG).show();
         Intent downloadIntent = new Intent();
         downloadIntent.putExtra("Activity", this);
         XMLDownloader xmlDownloader = new XMLDownloader();

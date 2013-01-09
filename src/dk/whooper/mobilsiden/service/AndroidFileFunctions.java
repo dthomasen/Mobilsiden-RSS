@@ -74,6 +74,10 @@ class AndroidFileFunctions {
     }
 
     public static void deleteFile(String fileName, Context context) {
-        context.deleteFile(fileName);
+        try {
+            context.deleteFile(fileName);
+        } catch (NullPointerException e) {
+            //File doesn't exist - Do nothing
+        }
     }
 }

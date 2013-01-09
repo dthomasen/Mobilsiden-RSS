@@ -3,6 +3,7 @@ package dk.whooper.mobilsiden.screens;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -31,6 +32,8 @@ public class CommentsViewer extends SherlockActivity {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature((int) Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_comments_viewer);
+
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         // Show the Up button in the action bar.
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -76,6 +79,11 @@ public class CommentsViewer extends SherlockActivity {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override

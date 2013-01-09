@@ -24,9 +24,6 @@ public class ArticleScraper extends AsyncTask<String, Void, String> {
                 if (element.className().equals("paragraph_banner")) {
                     element.remove();
                 }
-                if (element.className().equals("controls")) {
-                    element.remove();
-                }
                 if (element.className().equals("category_list")) {
                     element.remove();
                 }
@@ -46,12 +43,22 @@ public class ArticleScraper extends AsyncTask<String, Void, String> {
                     element.remove();
                 }
 
+                if (element.tagName().equals("object")) {
+                    element.remove();
+                }
+
                 if (element.tagName().equals("h1")) {
                     //String oldHeader = element.html();
                     // String oldHeaderWithoutDoubleSpace = oldHeader.trim().replaceAll(" +", " ");
                     String newHTML = "<h1 style=\"font-size: 15px;\">" + element.text() + "</h1>";
                     element.html(newHTML);
                 }
+
+                if (element.tagName().equals("h2")) {
+                    String newHTML = "<h2 style=\"font-size: 14px;\">" + element.text() + "</h2>";
+                    element.html(newHTML);
+                }
+
 
                 if (element.className().equals("entry_body")) {
                     String newHTML = "<p style=\"font-weight: bold; font-size: 13px;\">" + element.text() + "</p>";
@@ -80,6 +87,9 @@ public class ArticleScraper extends AsyncTask<String, Void, String> {
 
                 if (element.className().equals("image_list")) {
                     for (Element e : element.getAllElements()) {
+                        if (e.className().equals("controls")) {
+                            e.remove();
+                        }
                         if (e.className().equals("caption")) {
                             String newHTML = "<div style=\"font-size: 13px; padding:3px; color:#888;\">" + element.text() + "</div>";
                             e.html(newHTML);

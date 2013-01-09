@@ -3,12 +3,14 @@ package dk.whooper.mobilsiden.screens;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -41,6 +43,8 @@ public class ArticleViewer extends SherlockActivity {
         getWindow().requestFeature((int) Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_article_viewer);
 
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         // Show the Up button in the action bar.
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowTitleEnabled(false);
@@ -62,6 +66,7 @@ public class ArticleViewer extends SherlockActivity {
         WebView webView = (WebView) findViewById(R.id.webView1);
 
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setPluginState(WebSettings.PluginState.ON);
 
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
@@ -98,6 +103,11 @@ public class ArticleViewer extends SherlockActivity {
             webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20120427 Firefox/15.0a1");
             webView.loadUrl(link);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override
