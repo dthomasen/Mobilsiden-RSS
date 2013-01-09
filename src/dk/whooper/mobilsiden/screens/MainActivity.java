@@ -34,6 +34,9 @@ public class MainActivity extends SherlockFragmentActivity implements
         final ActionBar actionBar = getActionBar();
 
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the app.        /*

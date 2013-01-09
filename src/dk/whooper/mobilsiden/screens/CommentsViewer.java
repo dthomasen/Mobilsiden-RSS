@@ -34,6 +34,7 @@ public class CommentsViewer extends SherlockActivity {
 
         // Show the Up button in the action bar.
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowTitleEnabled(false);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments_viewer);
