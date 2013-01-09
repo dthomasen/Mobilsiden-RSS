@@ -47,10 +47,48 @@ public class ArticleScraper extends AsyncTask<String, Void, String> {
                 }
 
                 if (element.tagName().equals("h1")) {
-                    String oldHeader = element.html();
-                    String oldHeaderWithoutDoubleSpace = oldHeader.trim().replaceAll(" +", " ");
-                    element.html(oldHeaderWithoutDoubleSpace);
+                    //String oldHeader = element.html();
+                    // String oldHeaderWithoutDoubleSpace = oldHeader.trim().replaceAll(" +", " ");
+                    String newHTML = "<h1 style=\"font-size: 15px;\">" + element.text() + "</h1>";
+                    element.html(newHTML);
                 }
+
+                if (element.className().equals("entry_body")) {
+                    String newHTML = "<p style=\"font-weight: bold; font-size: 13px;\">" + element.text() + "</p>";
+                    element.html(newHTML);
+                }
+
+                if (element.className().equals("article_author")) {
+                    Elements elements = element.getAllElements();
+
+                    for (Element e : elements) {
+                        if (e.tagName().equals("a")) {
+                            e.remove();
+                        }
+                    }
+
+                    String newHTML = "<div style=\"text-decoration: underline; font-size: 13px;\">" + element.text().replace(",", " ") + "</div>";
+                    element.html(newHTML);
+                }
+
+                if (element.tagName().equals("p")) {
+                    if (!element.className().equals("entry_body")) {
+                        String newHTML = "<div style=\"font-size: 13px;\">" + element.html() + "</div>";
+                        element.html(newHTML);
+                    }
+                }
+
+                if (element.className().equals("image_list")) {
+                    for (Element e : element.getAllElements()) {
+                        if (e.className().equals("caption")) {
+                            String newHTML = "<div style=\"font-size: 13px; padding:3px; color:#888;\">" + element.text() + "</div>";
+                            e.html(newHTML);
+                        }
+                    }
+                    String newHTML = "<div style=\"border-style:solid; border-width:1px; border-color:#dcdcdc; padding:3px;\">" + element.html() + "</div>";
+                    element.html(newHTML);
+                }
+
                 if (element.tagName().equals("iframe")) {
                     Boolean youtubeFound = false;
                     if (element.attr("src").contains("youtube")) {

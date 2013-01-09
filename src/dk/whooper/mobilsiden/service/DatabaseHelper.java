@@ -140,7 +140,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<Item> getAllItemsFromNews() {
         List<Item> itemList = new ArrayList<Item>();
-        String selectQuery = "SELECT  * FROM " + "news";
+        String selectQuery = "SELECT  * FROM " + "news ORDER BY " + KEY_PUBDATE + " asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -165,7 +165,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<Item> getAllItemsFromReviews() {
         List<Item> itemList = new ArrayList<Item>();
-        String selectQuery = "SELECT  * FROM " + "reviews";
+        String selectQuery = "SELECT  * FROM " + "reviews ORDER BY " + KEY_PUBDATE + " asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -190,7 +190,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<Item> getAllItemsFromWebTv() {
         List<Item> itemList = new ArrayList<Item>();
-        String selectQuery = "SELECT  * FROM " + "webtv";
+        String selectQuery = "SELECT  * FROM " + "webtv ORDER BY " + KEY_PUBDATE + " asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -215,7 +215,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public List<Item> getAllItemsFromTips() {
         List<Item> itemList = new ArrayList<Item>();
-        String selectQuery = "SELECT  * FROM " + "tips";
+        String selectQuery = "SELECT  * FROM " + "tips ORDER BY " + KEY_PUBDATE + " asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
