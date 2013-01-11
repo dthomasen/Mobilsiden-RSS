@@ -91,7 +91,7 @@ public class TipsFragment extends SherlockListFragment {
 
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
         dbConn.setTipsArticleUnreadStatus(false, item.getTitle());
-
+        dbConn.close();
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
         intent.putExtra("item", item);
 

@@ -1,15 +1,20 @@
 package dk.whooper.mobilsiden.screens;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import dk.whooper.mobilsiden.R;
+import dk.whooper.mobilsiden.service.DatabaseHelper;
 import dk.whooper.mobilsiden.service.SectionsPagerAdapter;
 import dk.whooper.mobilsiden.service.XMLDownloader;
 
@@ -24,6 +29,7 @@ public class MainActivity extends SherlockFragmentActivity implements
     private ViewPager mViewPager;
 
     private static final String TAG = "MainActivity";
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +101,24 @@ public class MainActivity extends SherlockFragmentActivity implements
                 downloadIntent.putExtra("Activity", this);
                 XMLDownloader xmlDownloader = new XMLDownloader();
                 xmlDownloader.execute(downloadIntent);
+                return true;
+            case R.id.menu_markasread:
+                new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Holo_Dialog))
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Markér alle som læst")
+                        .setMessage("Vil du markere alle artikler som læst?")
+                        .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DatabaseHelper dbConn = new DatabaseHelper(context);
+                                dbConn.markAllAsRead();
+                                dbConn.close();
+                            }
+
+                        })
+                        .setNegativeButton("Nej", null)
+                        .show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

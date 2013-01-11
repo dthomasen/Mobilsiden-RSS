@@ -91,7 +91,7 @@ public class AnmeldelserFragment extends SherlockListFragment {
 
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
         dbConn.setReviewsArticleUnreadStatus(false, item.getTitle());
-
+        dbConn.close();
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
         intent.putExtra("item", item);
 

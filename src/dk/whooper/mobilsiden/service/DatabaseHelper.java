@@ -352,4 +352,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Intent i = new Intent("ArticlesUpdated");
         context.sendBroadcast(i);
     }
+
+    public void markAllAsRead() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues dataToInsert = new ContentValues();
+        dataToInsert.put(KEY_UNREAD, false);
+
+        db.update("webtv", dataToInsert, null, null);
+        db.update("reviews", dataToInsert, null, null);
+        db.update("tips", dataToInsert, null, null);
+        db.update("news", dataToInsert, null, null);
+
+        Intent i = new Intent("ArticlesUpdated");
+        context.sendBroadcast(i);
+    }
 }

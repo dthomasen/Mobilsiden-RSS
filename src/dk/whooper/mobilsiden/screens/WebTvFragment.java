@@ -90,6 +90,7 @@ public class WebTvFragment extends SherlockListFragment {
 
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
         dbConn.setWebTVArticleUnreadStatus(false, item.getTitle());
+        dbConn.close();
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
         intent.putExtra("item", item);
 

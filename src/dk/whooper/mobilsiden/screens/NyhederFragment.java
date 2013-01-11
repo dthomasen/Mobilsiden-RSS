@@ -1,6 +1,7 @@
 package dk.whooper.mobilsiden.screens;
 
 
+import android.R;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,11 +88,12 @@ public class NyhederFragment extends SherlockListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        progressDialog = ProgressDialog.show(getActivity(), "Vent venligst", "Henter artiklen...");
+        progressDialog = ProgressDialog.show(new ContextThemeWrapper(getActivity(), R.style.Theme_Holo_Dialog), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
         Item item = (Item) newsList.getItemAtPosition(position);
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
         dbConn.setNewsArticleUnreadStatus(false, item.getTitle());
+        dbConn.close();
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
         intent.putExtra("item", item);
 
