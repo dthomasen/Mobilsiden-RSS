@@ -16,8 +16,10 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.google.gson.Gson;
 import dk.whooper.mobilsiden.R;
-import dk.whooper.mobilsiden.service.CommentsScraper;
+import dk.whooper.mobilsiden.business.Comment;
+import dk.whooper.mobilsiden.service.CommentsDownloader;
 
 import java.util.concurrent.ExecutionException;
 
@@ -55,14 +57,18 @@ public class CommentsViewer extends SherlockActivity {
         });
 
         webView.setWebViewClient(new Callback());
-        CommentsScraper commentsScraper = new CommentsScraper();
+        CommentsDownloader commentsDownloader = new CommentsDownloader();
         try {
             webView.setHorizontalScrollBarEnabled(false);
             webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
             String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
             String end = "</body></html>";
-            String html = commentsScraper.execute(link).get();
-            if (html.equals("")) { //If no comments to the article
+            String result = commentsDownloader.execute(link).get();
+
+            Gson gson = new Gson();
+            Comment[] comments = gson.fromJson(result, Comment[].class);
+
+            if (comments.length == 0) { //If no comments to the article
                 AlertDialog.Builder noCommentsPopup = new AlertDialog.Builder(this);
 
                 noCommentsPopup.setMessage("Der er endnu ingen kommentarer til denne artikel - Du kan blive den første!");
@@ -70,9 +76,19 @@ public class CommentsViewer extends SherlockActivity {
                 noCommentsPopup.setPositiveButton("OK", null);
                 noCommentsPopup.setCancelable(true);
                 noCommentsPopup.create().show();
+            } else {
+                String html = "<div style=\"font-size: 12px\">";
+                for (Comment com : comments) {
+                    String date = com.getCreated().split("T")[0] + " " + com.getCreated().split("T")[1].substring(1).split("\\+")[0];
+                    html = html + "<p><strong>" + com.getUser() + " - " + com.getTitle() + "</strong><br />" + com.getContent() + "<div style=\"float: right; color: gray;\">" + date + "</div></p><br /><hr>";
+                }
+                html = html + "</div>";
+
+
+                webView.loadData(start + html + end, "text/html; charset=UTF-8", null);
             }
 
-            webView.loadData(start + html + end, "text/html; charset=UTF-8", null);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

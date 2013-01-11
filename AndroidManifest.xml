@@ -63,15 +63,6 @@
                     android:value="dk.whooper.mobilsiden.screens.MainActivity"/>
         </activity>
 
-        <activity
-                android:name="dk.whooper.mobilsiden.screens.SettingsActivity"
-                android:label="@string/title_activity_settings"
-                android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity"
-                android:logo="@drawable/logonavigation">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="dk.whooper.mobilsiden.screens.MainActivity"/>
-        </activity>
     </application>
 
 </manifest>
