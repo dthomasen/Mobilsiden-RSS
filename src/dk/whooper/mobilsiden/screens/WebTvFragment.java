@@ -53,6 +53,7 @@ public class WebTvFragment extends SherlockListFragment {
                 Log.d(TAG, "WebTV broadcast recieved");
                 DatabaseHelper dbConn = new DatabaseHelper(getActivity());
                 webtvItems = dbConn.getAllItemsFromWebTv();
+                adapter.setItemArray(webtvItems);
                 adapter.notifyDataSetChanged();
                 dbConn.close();
             }
@@ -85,9 +86,10 @@ public class WebTvFragment extends SherlockListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         progressDialog = ProgressDialog.show(getActivity(), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
-        DatabaseHelper dbConn = new DatabaseHelper(getActivity());
         Item item = (Item) webtvList.getItemAtPosition(position);
 
+        DatabaseHelper dbConn = new DatabaseHelper(getActivity());
+        dbConn.setWebTVArticleUnreadStatus(false, item.getTitle());
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
         intent.putExtra("item", item);
 

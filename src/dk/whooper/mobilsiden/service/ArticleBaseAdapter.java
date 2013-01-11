@@ -1,6 +1,7 @@
 package dk.whooper.mobilsiden.service;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,10 @@ public class ArticleBaseAdapter extends BaseAdapter {
         return position;
     }
 
+    public void setItemArray(List<Item> itemArray) {
+        this.itemArray = itemArray;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -60,6 +65,12 @@ public class ArticleBaseAdapter extends BaseAdapter {
             v.setTag(mHolder);
         } else {
             mHolder = (MainListHolder) v.getTag();
+        }
+
+        if (itemArray.get(position).isUnread()) {
+            mHolder.txt1.setTypeface(null, Typeface.BOLD);
+        } else {
+            mHolder.txt1.setTypeface(null, Typeface.NORMAL);
         }
         mHolder.txt1.setText(itemArray.get(position).getTitle());
         mHolder.txt2.setText(Jsoup.parse(itemArray.get(position).getDescription()).text());

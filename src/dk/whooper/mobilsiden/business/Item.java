@@ -9,18 +9,20 @@ public class Item implements Serializable {
     private String comments;
     private String author;
     private String pubDate;
+    private Boolean unread;
 
     public Item() {
 
     }
 
-    public Item(String title, String link, String description, String comments, String author, String pubDate) {
+    public Item(String title, String link, String description, String comments, String author, String pubDate, Boolean unread) {
         this.title = title;
         this.link = link;
         this.description = description;
         this.comments = comments;
         this.author = author;
         this.pubDate = pubDate;
+        this.unread = unread;
     }
 
     public String getTitle() {
@@ -73,5 +75,13 @@ public class Item implements Serializable {
 
     public String toString() {
         return title + " " + link + " " + description + " " + comments + " " + author + " " + pubDate;
+    }
+
+    public Boolean isUnread() {
+        return unread;
+    }
+
+    public void setUnread(Boolean unread) {
+        this.unread = unread;
     }
 }

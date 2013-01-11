@@ -52,10 +52,10 @@ public class NyhederFragment extends SherlockListFragment {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                // TODO Auto-generated method stub
                 Log.d(TAG, "Nyheder broadcast recieved");
                 DatabaseHelper dbConn = new DatabaseHelper(getActivity());
                 newsItems = dbConn.getAllItemsFromNews();
+                adapter.setItemArray(newsItems);
                 adapter.notifyDataSetChanged();
                 dbConn.close();
             }
@@ -88,9 +88,9 @@ public class NyhederFragment extends SherlockListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         progressDialog = ProgressDialog.show(getActivity(), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
-        DatabaseHelper dbConn = new DatabaseHelper(getActivity());
         Item item = (Item) newsList.getItemAtPosition(position);
-
+        DatabaseHelper dbConn = new DatabaseHelper(getActivity());
+        dbConn.setNewsArticleUnreadStatus(false, item.getTitle());
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
         intent.putExtra("item", item);
 

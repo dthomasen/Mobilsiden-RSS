@@ -53,6 +53,8 @@ public class TipsFragment extends SherlockListFragment {
                 Log.d(TAG, "tips broadcast recieved");
                 DatabaseHelper dbConn = new DatabaseHelper(getActivity());
                 tipsItems = dbConn.getAllItemsFromTips();
+                adapter.setItemArray(tipsItems);
+                adapter.notifyDataSetChanged();
                 adapter.notifyDataSetChanged();
                 dbConn.close();
             }
@@ -85,8 +87,10 @@ public class TipsFragment extends SherlockListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         progressDialog = ProgressDialog.show(getActivity(), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
-        DatabaseHelper dbConn = new DatabaseHelper(getActivity());
         Item item = (Item) tipsList.getItemAtPosition(position);
+
+        DatabaseHelper dbConn = new DatabaseHelper(getActivity());
+        dbConn.setTipsArticleUnreadStatus(false, item.getTitle());
 
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
         intent.putExtra("item", item);

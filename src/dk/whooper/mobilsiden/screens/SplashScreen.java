@@ -31,7 +31,7 @@ public class SplashScreen extends SherlockActivity {
 
             }
 
-        }, 2000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
+        }, 1000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
 
     }
 
