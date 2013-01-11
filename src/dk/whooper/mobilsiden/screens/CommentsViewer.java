@@ -2,16 +2,24 @@ package dk.whooper.mobilsiden.screens;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -19,7 +27,9 @@ import com.actionbarsherlock.view.Window;
 import com.google.gson.Gson;
 import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.business.Comment;
+import dk.whooper.mobilsiden.business.SuccessLogin;
 import dk.whooper.mobilsiden.service.CommentsDownloader;
+import dk.whooper.mobilsiden.service.LoginTokenCollector;
 
 import java.util.concurrent.ExecutionException;
 
@@ -27,6 +37,7 @@ public class CommentsViewer extends SherlockActivity {
 
     private final Activity activity = this;
     private static final String TAG = "WebViewer";
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +115,21 @@ public class CommentsViewer extends SherlockActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        SharedPreferences settings = getSharedPreferences("mobilsiden", 0);
+        String token = settings.getString("token", null);
+
+        if (token == null) {
+            menu.add(Menu.NONE, R.id.addComment, Menu.NONE, "Comment").setIcon(R.drawable.login)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        } else {
+            menu.add(Menu.NONE, R.id.addComment, Menu.NONE, "Comment").setIcon(R.drawable.plus)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+
+
         // Inflate the menu; this adds items to the action bar if it is present.
-        getSupportMenuInflater().inflate(R.menu.activity_web_viewer, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_comments_viewer, menu);
         return true;
     }
 
@@ -126,6 +150,63 @@ public class CommentsViewer extends SherlockActivity {
             case R.id.menu_settings:
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
+                return true;
+            case R.id.addComment:
+
+                SharedPreferences settings = getSharedPreferences("mobilsiden", 0);
+                String token = settings.getString("token", null);
+
+                if (token == null) {
+                    // custom dialog
+                    final Dialog dialog = new Dialog(new ContextThemeWrapper(context, android.R.style.Theme_Holo_Dialog));
+                    dialog.setContentView(R.layout.login_popup);
+                    dialog.setTitle("Login til Mobilsiden.dk");
+                    Button cancelButton = (Button) dialog.findViewById(R.id.btn_cancel);
+                    // if button is clicked, close the custom dialog
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    Button loginButton = (Button) dialog.findViewById(R.id.btn_login);
+
+                    loginButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                LoginTokenCollector tokenCollector = new LoginTokenCollector();
+                                EditText username = (EditText) dialog.findViewById(R.id.user_name);
+                                EditText password = (EditText) dialog.findViewById(R.id.password);
+
+                                String result = tokenCollector.execute(username.getText().toString(), password.getText().toString()).get();
+
+                                if (result.equals("loginFailed")) {
+                                    Toast.makeText(context, "Login forkert - Prøv igen...", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Gson gson = new Gson();
+                                    SuccessLogin sl = gson.fromJson(result, SuccessLogin.class);
+
+                                    SharedPreferences settings = getSharedPreferences("mobilsiden", 0);
+                                    SharedPreferences.Editor editor = settings.edit();
+                                    editor.putString("token", sl.getToken());
+                                    editor.commit();
+                                    invalidateOptionsMenu();
+                                    dialog.dismiss();
+                                }
+
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    dialog.show();
+                } else {
+                    Toast.makeText(this, "Allerede logget ind", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

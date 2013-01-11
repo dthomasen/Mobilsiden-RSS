@@ -1,6 +1,7 @@
 package dk.whooper.mobilsiden.service;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -12,11 +13,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 
-public class CommentsDownloader extends AsyncTask<String, Void, String> {
-    private static final String TAG = "CommentsDownloader";
+public class LoginTokenCollector extends AsyncTask<String, Void, String> {
+    private static final String TAG = "LoginTokenCollector";
     private String result;
 
 
@@ -26,22 +25,8 @@ public class CommentsDownloader extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         HttpClient httpClient = new DefaultHttpClient();
 
-        String resURL = "";
 
-        //Resolving redirect address
-        try {
-            URLConnection con = new URL(params[0]).openConnection();
-            con.connect();
-            InputStream is = con.getInputStream();
-            resURL = String.valueOf(con.getURL());
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String id = resURL.split("lid.")[1].split("/")[0];
-
-        String url = "http://www.mobilsiden.dk/services/json/comments.php?key=5535106688a0a103926ff1e3841e8335&comment[articleId]=" + id;
+        String url = "http://www.mobilsiden.dk/services/json/auth.php?key=5535106688a0a103926ff1e3841e8335&login=" + params[0] + "&pass=" + params[1];
 
         HttpGet request = new HttpGet(url);
         HttpResponse webServerResponse = null;
@@ -61,6 +46,7 @@ public class CommentsDownloader extends AsyncTask<String, Void, String> {
             try {
                 inStream = httpEntity.getContent();
                 result = convertStreamToString(inStream);
+                Log.d(TAG, "Dette er mit json!: " + result);
                 inStream.close();
             } catch (IllegalStateException e) {
                 e.printStackTrace();
@@ -70,9 +56,7 @@ public class CommentsDownloader extends AsyncTask<String, Void, String> {
         }
 
         if (webServerResponse.getStatusLine().getStatusCode() == 400) {
-            return "badRequest";
-        } else if (webServerResponse.getStatusLine().getStatusCode() == 404) {
-            return "notFound";
+            return "loginFailed";
         }
 
         return result;

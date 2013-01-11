@@ -9,8 +9,15 @@
     <string name="menu_settings">Indstillinger</string>
     <string name="title_activity_web_viewer">Mobilsiden.dk</string>
     <string name="menu_refresh">Opdater</string>
+    <string name="menu_addcomment">Skriv kommentar</string>
     <string name="menu_markasread">Marker alle som læst</string>
     <string name="comments_label">Kommentarer</string>
     <string name="youtube_label">Youtube</string>
     <string name="app_id">487027081336289</string>
+    <string name="dialog_cancel">Annuller</string>
+    <string name="dialog_submit">Login</string>
+    <string name="dialog_uname">E-mail</string>
+    <string name="dialog_pass">Password</string>
+
+
 </resources>
