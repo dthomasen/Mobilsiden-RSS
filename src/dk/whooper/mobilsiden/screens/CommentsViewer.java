@@ -30,6 +30,7 @@ import dk.whooper.mobilsiden.business.Comment;
 import dk.whooper.mobilsiden.business.SuccessLogin;
 import dk.whooper.mobilsiden.service.CommentsDownloader;
 import dk.whooper.mobilsiden.service.LoginTokenCollector;
+import dk.whooper.mobilsiden.service.PostComment;
 
 import java.util.concurrent.ExecutionException;
 
@@ -38,6 +39,8 @@ public class CommentsViewer extends SherlockActivity {
     private final Activity activity = this;
     private static final String TAG = "WebViewer";
     private Context context = this;
+    private String link = "";
+    private String token = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class CommentsViewer extends SherlockActivity {
         setContentView(R.layout.activity_comments_viewer);
 
 
-        String link = getIntent().getExtras().getString("link");
+        link = getIntent().getExtras().getString("link");
         WebView webView = (WebView) findViewById(R.id.webView1);
 
         webView.getSettings().setJavaScriptEnabled(true);
@@ -154,7 +157,7 @@ public class CommentsViewer extends SherlockActivity {
             case R.id.addComment:
 
                 SharedPreferences settings = getSharedPreferences("mobilsiden", 0);
-                String token = settings.getString("token", null);
+                token = settings.getString("token", null);
 
                 if (token == null) {
                     // custom dialog
@@ -205,8 +208,49 @@ public class CommentsViewer extends SherlockActivity {
                     });
                     dialog.show();
                 } else {
-                    Toast.makeText(this, "Allerede logget ind", Toast.LENGTH_SHORT).show();
+                    final Dialog dialog = new Dialog(new ContextThemeWrapper(context, android.R.style.Theme_Holo_Dialog));
+                    dialog.setContentView(R.layout.post_comment);
+                    dialog.setTitle("Postér kommentar");
+
+                    Button cancelButton = (Button) dialog.findViewById(R.id.btn_cancel_comment);
+                    // if button is clicked, close the custom dialog
+                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    Button loginButton = (Button) dialog.findViewById(R.id.btn_post_comment);
+
+                    loginButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            PostComment postComment = new PostComment();
+                            EditText title = (EditText) dialog.findViewById(R.id.comment_title);
+                            EditText message = (EditText) dialog.findViewById(R.id.comment_message);
+                            String result = null;
+                            try {
+                                result = postComment.execute(link, token, title.getText().toString(), message.getText().toString()).get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+
+                            Log.d(TAG, result);
+
+                            if (result.contains("success")) {
+                                Toast.makeText(context, "Kommantaren er postet...", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            } else {
+                                Toast.makeText(context, "Fejl i kommentar posteringen...", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    dialog.show();
                 }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
