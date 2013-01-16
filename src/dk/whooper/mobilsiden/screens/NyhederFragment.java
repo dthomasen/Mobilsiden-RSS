@@ -95,6 +95,7 @@ public class NyhederFragment extends SherlockListFragment {
         dbConn.setNewsArticleUnreadStatus(false, item.getHeader());
         dbConn.close();
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
+        Log.d(TAG, "Article!!: " + item.getAuthor());
         intent.putExtra("article", item);
 
         startActivity(intent);

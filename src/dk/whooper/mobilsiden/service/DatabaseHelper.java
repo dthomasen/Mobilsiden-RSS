@@ -25,6 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_HEADER = "header";
     private static final String KEY_AUTHOR = "author";
     private static final String KEY_BODYTEXT = "bodytext";
+    private static final String KEY_URL = "url";
     private static final String KEY_UNREAD = "unread";
 
     private final Context context;
@@ -39,16 +40,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("NewsDatase", "OnCreate");
         String CREATE_NEWS_TABLE = "CREATE TABLE news ("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CATEGORY + " TEXT,"
-                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_UNREAD + " BOOL)";
+                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_URL + " TEXT," + KEY_UNREAD + " BOOL)";
         String CREATE_REVIEWS_TABLE = "CREATE TABLE reviews ("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CATEGORY + " TEXT,"
-                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_UNREAD + " BOOL)";
+                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_URL + " TEXT," + KEY_UNREAD + " BOOL)";
         String CREATE_WEBTV_TABLE = "CREATE TABLE webtv ("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CATEGORY + " TEXT,"
-                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_UNREAD + " BOOL)";
+                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_URL + " TEXT," + KEY_UNREAD + " BOOL)";
         String CREATE_TIPS_TABLE = "CREATE TABLE tips ("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CATEGORY + " TEXT,"
-                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_UNREAD + " BOOL)";
+                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_URL + " TEXT," + KEY_UNREAD + " BOOL)";
 
         db.execSQL(CREATE_NEWS_TABLE);
         db.execSQL(CREATE_REVIEWS_TABLE);
@@ -72,7 +73,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery("SELECT * FROM news WHERE " + KEY_ID + "= '" + article.getId() + "'", null);
         if (cursor.getCount() == 0) {
-            Log.d("database", "Adding to db 2");
             ContentValues values = new ContentValues();
             values.put(KEY_ID, article.getId());
             values.put(KEY_CATEGORY, article.getCategory());
@@ -82,6 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_HEADER, article.getHeader());
             values.put(KEY_AUTHOR, article.getAuthor());
             values.put(KEY_BODYTEXT, article.getBodytext());
+            values.put(KEY_URL, article.getUrl());
             values.put(KEY_UNREAD, true);
 
             // Inserting Row
@@ -97,7 +98,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM tips WHERE " + KEY_ID + "= '" + article.getId() + "'", null);
         if (cursor.getCount() == 0) {
             ContentValues values = new ContentValues();
-
             values.put(KEY_ID, article.getId());
             values.put(KEY_CATEGORY, article.getCategory());
             values.put(KEY_VIEWS, article.getViews().toString());
@@ -106,6 +106,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_HEADER, article.getHeader());
             values.put(KEY_AUTHOR, article.getAuthor());
             values.put(KEY_BODYTEXT, article.getBodytext());
+            values.put(KEY_URL, article.getUrl());
             values.put(KEY_UNREAD, true);
 
             // Inserting Row
@@ -121,7 +122,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM reviews WHERE " + KEY_ID + "= '" + article.getId() + "'", null);
         if (cursor.getCount() == 0) {
             ContentValues values = new ContentValues();
-
             values.put(KEY_ID, article.getId());
             values.put(KEY_CATEGORY, article.getCategory());
             values.put(KEY_VIEWS, article.getViews().toString());
@@ -130,6 +130,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_HEADER, article.getHeader());
             values.put(KEY_AUTHOR, article.getAuthor());
             values.put(KEY_BODYTEXT, article.getBodytext());
+            values.put(KEY_URL, article.getUrl());
             values.put(KEY_UNREAD, true);
 
             // Inserting Row
@@ -145,7 +146,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM webtv WHERE " + KEY_ID + "= '" + article.getId() + "'", null);
         if (cursor.getCount() == 0) {
             ContentValues values = new ContentValues();
-
             values.put(KEY_ID, article.getId());
             values.put(KEY_CATEGORY, article.getCategory());
             values.put(KEY_VIEWS, article.getViews().toString());
@@ -154,6 +154,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_HEADER, article.getHeader());
             values.put(KEY_AUTHOR, article.getAuthor());
             values.put(KEY_BODYTEXT, article.getBodytext());
+            values.put(KEY_URL, article.getUrl());
             values.put(KEY_UNREAD, true);
 
             // Inserting Row
@@ -183,7 +184,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 article.setHeader(cursor.getString(5));
                 article.setAuthor(cursor.getString(6));
                 article.setBodytext(cursor.getString(7));
-                article.setUnread(cursor.getInt(8) != 0);
+                article.setUrl(cursor.getString(8));
+                article.setUnread(cursor.getInt(9) != 0);
 
                 // Adding item to list
                 articleList.add(article);
@@ -212,7 +214,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 article.setHeader(cursor.getString(5));
                 article.setAuthor(cursor.getString(6));
                 article.setBodytext(cursor.getString(7));
-                article.setUnread(cursor.getInt(8) != 0);
+                article.setUrl(cursor.getString(8));
+                article.setUnread(cursor.getInt(9) != 0);
 
                 // Adding item to list
                 articleList.add(article);
@@ -241,7 +244,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 article.setHeader(cursor.getString(5));
                 article.setAuthor(cursor.getString(6));
                 article.setBodytext(cursor.getString(7));
-                article.setUnread(cursor.getInt(8) != 0);
+                article.setUrl(cursor.getString(8));
+                article.setUnread(cursor.getInt(9) != 0);
 
                 // Adding item to list
                 articleList.add(article);
@@ -270,7 +274,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 article.setHeader(cursor.getString(5));
                 article.setAuthor(cursor.getString(6));
                 article.setBodytext(cursor.getString(7));
-                article.setUnread(cursor.getInt(8) != 0);
+                article.setUrl(cursor.getString(8));
+                article.setUnread(cursor.getInt(9) != 0);
 
                 // Adding item to list
                 articleList.add(article);

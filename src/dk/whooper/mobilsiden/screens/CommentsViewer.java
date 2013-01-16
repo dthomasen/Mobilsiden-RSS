@@ -60,6 +60,7 @@ public class CommentsViewer extends SherlockActivity {
 
 
         link = getIntent().getExtras().getString("link");
+        Log.d(TAG, "link!!: " + link);
         WebView webView = (WebView) findViewById(R.id.webView1);
 
         webView.getSettings().setJavaScriptEnabled(true);

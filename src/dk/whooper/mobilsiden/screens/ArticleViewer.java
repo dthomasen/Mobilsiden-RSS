@@ -54,9 +54,11 @@ public class ArticleViewer extends SherlockActivity {
             description = "";
             title = article.getHeader();
             content = article.getBodytext();
+            Log.d(TAG, "link!!: " + article.getUrl());
             link = article.getUrl();
         } else {
-            link = getIntent().getStringExtra("link");
+            Log.d(TAG, "link!!2: " + getIntent().getExtras().getString("link"));
+            link = getIntent().getExtras().getString("link");
         }
 
         WebView webView = (WebView) findViewById(R.id.webView1);
