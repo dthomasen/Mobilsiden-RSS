@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
-import dk.whooper.mobilsiden.business.Item;
+import dk.whooper.mobilsiden.business.Article;
 import dk.whooper.mobilsiden.service.ArticleBaseAdapter;
 import dk.whooper.mobilsiden.service.DatabaseHelper;
 
@@ -26,7 +26,7 @@ public class AnmeldelserFragment extends SherlockListFragment {
     private static final String TAG = "AnmeldelserFragment";
     private BroadcastReceiver updateReciever;
     private ArticleBaseAdapter adapter;
-    private List<Item> reviewsItems;
+    private List<Article> reviewsItems;
     private ListView reviewsList;
     ProgressDialog progressDialog;
 
@@ -89,13 +89,13 @@ public class AnmeldelserFragment extends SherlockListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         progressDialog = ProgressDialog.show(new ContextThemeWrapper(getActivity(), R.style.Theme_Holo_Dialog), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
-        Item item = (Item) reviewsList.getItemAtPosition(position);
+        Article item = (Article) reviewsList.getItemAtPosition(position);
 
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
-        dbConn.setReviewsArticleUnreadStatus(false, item.getTitle());
+        dbConn.setReviewsArticleUnreadStatus(false, item.getHeader());
         dbConn.close();
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
-        intent.putExtra("item", item);
+        intent.putExtra("article", item);
 
         startActivity(intent);
     }

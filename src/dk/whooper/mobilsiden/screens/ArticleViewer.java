@@ -2,11 +2,9 @@ package dk.whooper.mobilsiden.screens;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.webkit.WebChromeClient;
@@ -19,21 +17,19 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import dk.whooper.mobilsiden.R;
-import dk.whooper.mobilsiden.business.Item;
-import dk.whooper.mobilsiden.service.ArticleScraper;
+import dk.whooper.mobilsiden.business.Article;
 import dk.whooper.mobilsiden.service.FacebookWrapper;
-
-import java.util.concurrent.ExecutionException;
 
 public class ArticleViewer extends SherlockActivity {
 
     private final Activity activity = this;
     private static final String TAG = "WebViewer";
-    private Item item;
-    private String link;
+    private Article article;
     private String description;
     private String youtubeLink = "";
     private String title;
+    private String link;
+    private String content;
     private FacebookWrapper fbWrapper = new FacebookWrapper("487027081336289");
 
     @Override
@@ -52,13 +48,13 @@ public class ArticleViewer extends SherlockActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_viewer);
 
+        article = (Article) getIntent().getExtras().getSerializable("article");
 
-        item = (Item) getIntent().getExtras().getSerializable("item");
-
-        if (item != null) {
-            description = item.getDescription();
-            title = item.getTitle();
-            link = item.getLink();
+        if (article != null) {
+            description = "";
+            title = article.getHeader();
+            content = article.getBodytext();
+            link = article.getUrl();
         } else {
             link = getIntent().getStringExtra("link");
         }
@@ -75,34 +71,12 @@ public class ArticleViewer extends SherlockActivity {
         });
 
         webView.setWebViewClient(new Callback());
+        webView.setHorizontalScrollBarEnabled(false);
+        webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (settings.getString("user_agent", "Mobil-optimeret").equals("Mobil-optimeret")) {
-            ArticleScraper articleScraper = new ArticleScraper();
-            try {
-                webView.setHorizontalScrollBarEnabled(false);
-                webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-                String article = articleScraper.execute(link).get();
-
-                if (article.contains("http://www.youtube.com")) {
-                    String[] splitArticle = article.split(" ", 2);
-                    youtubeLink = splitArticle[0];
-                    article = splitArticle[1];
-                    invalidateOptionsMenu();
-                }
-
-                String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
-                String end = "</body></html>";
-                webView.loadData(start + article + end, "text/html; charset=UTF-8", null);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        } else {
-            webView.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20120427 Firefox/15.0a1");
-            webView.loadUrl(link);
-        }
+        String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
+        String end = "</body></html>";
+        webView.loadData(start + content + end, "text/html; charset=UTF-8", null);
     }
 
     @Override

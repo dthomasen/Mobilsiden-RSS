@@ -14,9 +14,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import dk.whooper.mobilsiden.R;
+import dk.whooper.mobilsiden.service.ArticleDownloader;
 import dk.whooper.mobilsiden.service.DatabaseHelper;
 import dk.whooper.mobilsiden.service.SectionsPagerAdapter;
-import dk.whooper.mobilsiden.service.XMLDownloader;
 
 import java.io.Serializable;
 
@@ -77,8 +77,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
         Intent downloadIntent = new Intent();
         downloadIntent.putExtra("Activity", this);
-        XMLDownloader xmlDownloader = new XMLDownloader();
-        xmlDownloader.execute(downloadIntent);
+        ArticleDownloader articleDownloader = new ArticleDownloader();
+        articleDownloader.execute(downloadIntent);
 
     }
 
@@ -101,8 +101,8 @@ public class MainActivity extends SherlockFragmentActivity implements
                 Toast.makeText(this, "Opdaterer artikler...", Toast.LENGTH_LONG).show();
                 Intent downloadIntent = new Intent();
                 downloadIntent.putExtra("Activity", this);
-                XMLDownloader xmlDownloader = new XMLDownloader();
-                xmlDownloader.execute(downloadIntent);
+                ArticleDownloader articleDownloader = new ArticleDownloader();
+                articleDownloader.execute(downloadIntent);
                 return true;
             case R.id.menu_markasread:
                 new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Holo_Dialog))

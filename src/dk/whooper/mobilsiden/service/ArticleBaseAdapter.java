@@ -8,15 +8,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import dk.whooper.mobilsiden.R;
-import dk.whooper.mobilsiden.business.Item;
-import org.jsoup.Jsoup;
+import dk.whooper.mobilsiden.business.Article;
 
 import java.util.List;
 
 
 public class ArticleBaseAdapter extends BaseAdapter {
 
-    private List<Item> itemArray;
+    private List<Article> articleList;
     private Context mContext;
     private LayoutInflater inflator;
     int checkbox;
@@ -25,21 +24,21 @@ public class ArticleBaseAdapter extends BaseAdapter {
      * @param context
      * @param itemArray
      */
-    public ArticleBaseAdapter(Context context, List<Item> itemArray) {
+    public ArticleBaseAdapter(Context context, List<Article> itemArray) {
         this.mContext = context;
-        this.itemArray = itemArray;
+        this.articleList = itemArray;
         this.inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
 
     @Override
     public int getCount() {
-        return itemArray.size();
+        return articleList.size();
     }
 
     @Override
-    public Item getItem(int position) {
-        return itemArray.get(position);
+    public Article getItem(int position) {
+        return articleList.get(position);
     }
 
     @Override
@@ -47,8 +46,8 @@ public class ArticleBaseAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setItemArray(List<Item> itemArray) {
-        this.itemArray = itemArray;
+    public void setItemArray(List<Article> itemArray) {
+        this.articleList = itemArray;
     }
 
     @Override
@@ -67,23 +66,17 @@ public class ArticleBaseAdapter extends BaseAdapter {
             mHolder = (MainListHolder) v.getTag();
         }
 
-        if (itemArray.get(position).isUnread()) {
+        if (articleList.get(position).isUnread()) {
             mHolder.txt1.setTypeface(null, Typeface.BOLD);
         } else {
             mHolder.txt1.setTypeface(null, Typeface.NORMAL);
         }
-        mHolder.txt1.setText(itemArray.get(position).getTitle());
-        mHolder.txt2.setText(Jsoup.parse(itemArray.get(position).getDescription()).text());
+        mHolder.txt1.setText(articleList.get(position).getHeader());
+        mHolder.txt2.setText("");
 
-        String[] dateSplitted = itemArray.get(position).getPubDate().split(" ");
-        String date = dateSplitted[0] + " " + dateSplitted[1] + " " + dateSplitted[2] + " " + dateSplitted[3];
+        String[] dateSplitted = articleList.get(position).getPublished().split("T");
+        String date = dateSplitted[0];
         mHolder.txt3.setText(date);
-
-        /*mHolder.txt.setTextSize(12);
-        mHolder.txt.setTextColor(Color.YELLOW);
-        mHolder.txt.setPadding(5, 5, 5, 5);*/
-        //mHolder.image.setImageResource(R.drawable.icon);
-
 
         return v;
     }

@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import dk.whooper.mobilsiden.business.Item;
+import dk.whooper.mobilsiden.business.Article;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +18,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "mobilsiden";
 
     private static final String KEY_ID = "id";
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_LINK = "link";
-    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_CATEGORY = "category";
+    private static final String KEY_VIEWS = "views";
     private static final String KEY_COMMENTS = "comments";
+    private static final String KEY_PUBLISHED = "published";
+    private static final String KEY_HEADER = "header";
     private static final String KEY_AUTHOR = "author";
-    private static final String KEY_PUBDATE = "pubDate";
+    private static final String KEY_BODYTEXT = "bodytext";
     private static final String KEY_UNREAD = "unread";
+
     private final Context context;
 
     public DatabaseHelper(Context context) {
@@ -36,17 +38,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d("NewsDatase", "OnCreate");
         String CREATE_NEWS_TABLE = "CREATE TABLE news ("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_TITLE + " TEXT,"
-                + KEY_LINK + " TEXT," + KEY_DESCRIPTION + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_PUBDATE + " TEXT," + KEY_UNREAD + " BOOL)";
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CATEGORY + " TEXT,"
+                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_UNREAD + " BOOL)";
         String CREATE_REVIEWS_TABLE = "CREATE TABLE reviews ("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_TITLE + " TEXT,"
-                + KEY_LINK + " TEXT," + KEY_DESCRIPTION + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_PUBDATE + " TEXT," + KEY_UNREAD + " BOOL)";
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CATEGORY + " TEXT,"
+                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_UNREAD + " BOOL)";
         String CREATE_WEBTV_TABLE = "CREATE TABLE webtv ("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_TITLE + " TEXT,"
-                + KEY_LINK + " TEXT," + KEY_DESCRIPTION + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_PUBDATE + " TEXT," + KEY_UNREAD + " BOOL)";
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CATEGORY + " TEXT,"
+                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_UNREAD + " BOOL)";
         String CREATE_TIPS_TABLE = "CREATE TABLE tips ("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + KEY_TITLE + " TEXT,"
-                + KEY_LINK + " TEXT," + KEY_DESCRIPTION + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_PUBDATE + " TEXT," + KEY_UNREAD + " BOOL)";
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CATEGORY + " TEXT,"
+                + KEY_VIEWS + " TEXT," + KEY_COMMENTS + " TEXT," + KEY_PUBLISHED + " TEXT," + KEY_HEADER + " TEXT," + KEY_AUTHOR + " TEXT," + KEY_BODYTEXT + " TEXT," + KEY_UNREAD + " BOOL)";
 
         db.execSQL(CREATE_NEWS_TABLE);
         db.execSQL(CREATE_REVIEWS_TABLE);
@@ -65,18 +67,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addItemToNewsDB(Item item) {
+    public void addItemToNewsDB(Article article) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM news WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM news WHERE " + KEY_ID + "= '" + article.getId() + "'", null);
         if (cursor.getCount() == 0) {
+            Log.d("database", "Adding to db 2");
             ContentValues values = new ContentValues();
-            values.put(KEY_TITLE, item.getTitle());
-            values.put(KEY_LINK, item.getLink());
-            values.put(KEY_DESCRIPTION, item.getDescription());
-            values.put(KEY_COMMENTS, item.getComments());
-            values.put(KEY_AUTHOR, item.getAuthor());
-            values.put(KEY_PUBDATE, item.getPubDate());
+            values.put(KEY_ID, article.getId());
+            values.put(KEY_CATEGORY, article.getCategory());
+            values.put(KEY_VIEWS, article.getViews().toString());
+            values.put(KEY_COMMENTS, article.getComments());
+            values.put(KEY_PUBLISHED, article.getPublished());
+            values.put(KEY_HEADER, article.getHeader());
+            values.put(KEY_AUTHOR, article.getAuthor());
+            values.put(KEY_BODYTEXT, article.getBodytext());
             values.put(KEY_UNREAD, true);
 
             // Inserting Row
@@ -86,69 +91,81 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    public void addItemToTipsDB(Item item) {
+    public void addItemToTipsDB(Article article) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM tips WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM tips WHERE " + KEY_ID + "= '" + article.getId() + "'", null);
         if (cursor.getCount() == 0) {
             ContentValues values = new ContentValues();
-            values.put(KEY_TITLE, item.getTitle());
-            values.put(KEY_LINK, item.getLink());
-            values.put(KEY_DESCRIPTION, item.getDescription());
-            values.put(KEY_COMMENTS, item.getComments());
-            values.put(KEY_AUTHOR, item.getAuthor());
-            values.put(KEY_PUBDATE, item.getPubDate());
+
+            values.put(KEY_ID, article.getId());
+            values.put(KEY_CATEGORY, article.getCategory());
+            values.put(KEY_VIEWS, article.getViews().toString());
+            values.put(KEY_COMMENTS, article.getComments());
+            values.put(KEY_PUBLISHED, article.getPublished());
+            values.put(KEY_HEADER, article.getHeader());
+            values.put(KEY_AUTHOR, article.getAuthor());
+            values.put(KEY_BODYTEXT, article.getBodytext());
             values.put(KEY_UNREAD, true);
 
             // Inserting Row
             db.insert("tips", null, values);
         }
+
         db.close(); // Closing database connection
     }
 
-    public void addItemToReviewsDB(Item item) {
+    public void addItemToReviewsDB(Article article) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM reviews WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM reviews WHERE " + KEY_ID + "= '" + article.getId() + "'", null);
         if (cursor.getCount() == 0) {
             ContentValues values = new ContentValues();
-            values.put(KEY_TITLE, item.getTitle());
-            values.put(KEY_LINK, item.getLink());
-            values.put(KEY_DESCRIPTION, item.getDescription());
-            values.put(KEY_COMMENTS, item.getComments());
-            values.put(KEY_AUTHOR, item.getAuthor());
-            values.put(KEY_PUBDATE, item.getPubDate());
+
+            values.put(KEY_ID, article.getId());
+            values.put(KEY_CATEGORY, article.getCategory());
+            values.put(KEY_VIEWS, article.getViews().toString());
+            values.put(KEY_COMMENTS, article.getComments());
+            values.put(KEY_PUBLISHED, article.getPublished());
+            values.put(KEY_HEADER, article.getHeader());
+            values.put(KEY_AUTHOR, article.getAuthor());
+            values.put(KEY_BODYTEXT, article.getBodytext());
             values.put(KEY_UNREAD, true);
 
             // Inserting Row
             db.insert("reviews", null, values);
         }
+
         db.close(); // Closing database connection
     }
 
-    public void addItemToWebTVDB(Item item) {
+    public void addItemToWebTVDB(Article article) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM webtv WHERE " + KEY_PUBDATE + "= '" + item.getPubDate() + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM webtv WHERE " + KEY_ID + "= '" + article.getId() + "'", null);
         if (cursor.getCount() == 0) {
             ContentValues values = new ContentValues();
-            values.put(KEY_TITLE, item.getTitle());
-            values.put(KEY_LINK, item.getLink());
-            values.put(KEY_DESCRIPTION, item.getDescription());
-            values.put(KEY_COMMENTS, item.getComments());
-            values.put(KEY_AUTHOR, item.getAuthor());
-            values.put(KEY_PUBDATE, item.getPubDate());
+
+            values.put(KEY_ID, article.getId());
+            values.put(KEY_CATEGORY, article.getCategory());
+            values.put(KEY_VIEWS, article.getViews().toString());
+            values.put(KEY_COMMENTS, article.getComments());
+            values.put(KEY_PUBLISHED, article.getPublished());
+            values.put(KEY_HEADER, article.getHeader());
+            values.put(KEY_AUTHOR, article.getAuthor());
+            values.put(KEY_BODYTEXT, article.getBodytext());
             values.put(KEY_UNREAD, true);
 
             // Inserting Row
             db.insert("webtv", null, values);
         }
+
         db.close(); // Closing database connection
     }
 
-    public List<Item> getAllItemsFromNews() {
-        List<Item> itemList = new ArrayList<Item>();
-        String selectQuery = "SELECT  * FROM " + "news ORDER BY " + KEY_PUBDATE + " asc";
+    public List<Article> getAllItemsFromNews() {
+        List<Article> articleList = new ArrayList<Article>();
+        String selectQuery = "SELECT  * FROM " + "news ORDER BY " + KEY_ID + " asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -156,25 +173,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                Item item = new Item();
-                item.setTitle(cursor.getString(1));
-                item.setLink(cursor.getString(2));
-                item.setDescription(cursor.getString(3));
-                item.setComments(cursor.getString(4));
-                item.setAuthor(cursor.getString(5));
-                item.setPubDate(cursor.getString(6));
-                item.setUnread(cursor.getInt(7) != 0);
+                Article article = new Article();
+
+                article.setId(cursor.getString(0));
+                article.setCategory(cursor.getString(1));
+                article.setViews(new Integer(cursor.getString(2)));
+                article.setComments(cursor.getString(3));
+                article.setPublished(cursor.getString(4));
+                article.setHeader(cursor.getString(5));
+                article.setAuthor(cursor.getString(6));
+                article.setBodytext(cursor.getString(7));
+                article.setUnread(cursor.getInt(8) != 0);
 
                 // Adding item to list
-                itemList.add(item);
+                articleList.add(article);
             } while (cursor.moveToNext());
         }
-        return itemList;
+        return articleList;
     }
 
-    public List<Item> getAllItemsFromReviews() {
-        List<Item> itemList = new ArrayList<Item>();
-        String selectQuery = "SELECT  * FROM " + "reviews ORDER BY " + KEY_PUBDATE + " asc";
+    public List<Article> getAllItemsFromReviews() {
+        List<Article> articleList = new ArrayList<Article>();
+        String selectQuery = "SELECT  * FROM " + "reviews ORDER BY " + KEY_ID + " asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -182,25 +202,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                Item item = new Item();
-                item.setTitle(cursor.getString(1));
-                item.setLink(cursor.getString(2));
-                item.setDescription(cursor.getString(3));
-                item.setComments(cursor.getString(4));
-                item.setAuthor(cursor.getString(5));
-                item.setPubDate(cursor.getString(6));
-                item.setUnread(cursor.getInt(7) != 0);
+                Article article = new Article();
+
+                article.setId(cursor.getString(0));
+                article.setCategory(cursor.getString(1));
+                article.setViews(new Integer(cursor.getString(2)));
+                article.setComments(cursor.getString(3));
+                article.setPublished(cursor.getString(4));
+                article.setHeader(cursor.getString(5));
+                article.setAuthor(cursor.getString(6));
+                article.setBodytext(cursor.getString(7));
+                article.setUnread(cursor.getInt(8) != 0);
 
                 // Adding item to list
-                itemList.add(item);
+                articleList.add(article);
             } while (cursor.moveToNext());
         }
-        return itemList;
+        return articleList;
     }
 
-    public List<Item> getAllItemsFromWebTv() {
-        List<Item> itemList = new ArrayList<Item>();
-        String selectQuery = "SELECT  * FROM " + "webtv ORDER BY " + KEY_PUBDATE + " asc";
+    public List<Article> getAllItemsFromWebTv() {
+        List<Article> articleList = new ArrayList<Article>();
+        String selectQuery = "SELECT  * FROM " + "webtv ORDER BY " + KEY_ID + " asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -208,25 +231,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                Item item = new Item();
-                item.setTitle(cursor.getString(1));
-                item.setLink(cursor.getString(2));
-                item.setDescription(cursor.getString(3));
-                item.setComments(cursor.getString(4));
-                item.setAuthor(cursor.getString(5));
-                item.setPubDate(cursor.getString(6));
-                item.setUnread(cursor.getInt(7) != 0);
+                Article article = new Article();
+
+                article.setId(cursor.getString(0));
+                article.setCategory(cursor.getString(1));
+                article.setViews(new Integer(cursor.getString(2)));
+                article.setComments(cursor.getString(3));
+                article.setPublished(cursor.getString(4));
+                article.setHeader(cursor.getString(5));
+                article.setAuthor(cursor.getString(6));
+                article.setBodytext(cursor.getString(7));
+                article.setUnread(cursor.getInt(8) != 0);
 
                 // Adding item to list
-                itemList.add(item);
+                articleList.add(article);
             } while (cursor.moveToNext());
         }
-        return itemList;
+        return articleList;
     }
 
-    public List<Item> getAllItemsFromTips() {
-        List<Item> itemList = new ArrayList<Item>();
-        String selectQuery = "SELECT  * FROM " + "tips ORDER BY " + KEY_PUBDATE + " asc";
+    public List<Article> getAllItemsFromTips() {
+        List<Article> articleList = new ArrayList<Article>();
+        String selectQuery = "SELECT  * FROM " + "tips ORDER BY " + KEY_ID + " asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -234,78 +260,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                Item item = new Item();
-                item.setTitle(cursor.getString(1));
-                item.setLink(cursor.getString(2));
-                item.setDescription(cursor.getString(3));
-                item.setComments(cursor.getString(4));
-                item.setAuthor(cursor.getString(5));
-                item.setPubDate(cursor.getString(6));
-                item.setUnread(cursor.getInt(7) != 0);
+                Article article = new Article();
+
+                article.setId(cursor.getString(0));
+                article.setCategory(cursor.getString(1));
+                article.setViews(new Integer(cursor.getString(2)));
+                article.setComments(cursor.getString(3));
+                article.setPublished(cursor.getString(4));
+                article.setHeader(cursor.getString(5));
+                article.setAuthor(cursor.getString(6));
+                article.setBodytext(cursor.getString(7));
+                article.setUnread(cursor.getInt(8) != 0);
 
                 // Adding item to list
-                itemList.add(item);
+                articleList.add(article);
             } while (cursor.moveToNext());
         }
-        return itemList;
-    }
-
-    public String getLinkFromWebTv(String title) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + KEY_COMMENTS + " FROM webtv WHERE " + KEY_TITLE + "= '" + title + "'", null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                String commentURL = cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
-                commentURL = commentURL.replaceAll("#comment_box", "");
-                db.close();
-                return commentURL;
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    public String getLinkFromNews(String title) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + KEY_COMMENTS + " FROM news WHERE " + KEY_TITLE + "= '" + title + "'", null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                String commentURL = cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
-                commentURL = commentURL.replaceAll("#comment_box", "");
-                db.close();
-                return commentURL;
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    public String getLinkFromReviews(String title) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + KEY_COMMENTS + " FROM reviews WHERE " + KEY_TITLE + "= '" + title + "'", null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                String commentURL = cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
-                commentURL = commentURL.replaceAll("#comment_box", "");
-                db.close();
-                return commentURL;
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
+        return articleList;
     }
 
     public void setNewsArticleUnreadStatus(Boolean unread, String title) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues dataToInsert = new ContentValues();
         dataToInsert.put(KEY_UNREAD, unread);
-        String where = KEY_TITLE + "=?";
+        String where = KEY_HEADER + "=?";
         String[] whereArgs = new String[]{title};
 
         db.update("news", dataToInsert, where, whereArgs);
@@ -318,7 +296,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues dataToInsert = new ContentValues();
         dataToInsert.put(KEY_UNREAD, unread);
-        String where = KEY_TITLE + "=?";
+        String where = KEY_HEADER + "=?";
         String[] whereArgs = new String[]{title};
 
         db.update("tips", dataToInsert, where, whereArgs);
@@ -331,7 +309,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues dataToInsert = new ContentValues();
         dataToInsert.put(KEY_UNREAD, unread);
-        String where = KEY_TITLE + "=?";
+        String where = KEY_HEADER + "=?";
         String[] whereArgs = new String[]{title};
 
         db.update("reviews", dataToInsert, where, whereArgs);
@@ -344,7 +322,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues dataToInsert = new ContentValues();
         dataToInsert.put(KEY_UNREAD, unread);
-        String where = KEY_TITLE + "=?";
+        String where = KEY_HEADER + "=?";
         String[] whereArgs = new String[]{title};
 
         db.update("webtv", dataToInsert, where, whereArgs);

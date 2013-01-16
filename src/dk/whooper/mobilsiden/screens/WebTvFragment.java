@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
-import dk.whooper.mobilsiden.business.Item;
+import dk.whooper.mobilsiden.business.Article;
 import dk.whooper.mobilsiden.service.ArticleBaseAdapter;
 import dk.whooper.mobilsiden.service.DatabaseHelper;
 
@@ -26,7 +26,7 @@ public class WebTvFragment extends SherlockListFragment {
     private static final String TAG = "WebTVFragment";
     private BroadcastReceiver updateReciever;
     private ArticleBaseAdapter adapter;
-    private List<Item> webtvItems;
+    private List<Article> webtvItems;
     private static ListView webtvList;
     ProgressDialog progressDialog;
 
@@ -88,13 +88,13 @@ public class WebTvFragment extends SherlockListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         progressDialog = ProgressDialog.show(new ContextThemeWrapper(getActivity(), R.style.Theme_Holo_Dialog), "Vent venligst", "Henter artiklen...");
         super.onListItemClick(l, v, position, id);
-        Item item = (Item) webtvList.getItemAtPosition(position);
+        Article article = (Article) webtvList.getItemAtPosition(position);
 
         DatabaseHelper dbConn = new DatabaseHelper(getActivity());
-        dbConn.setWebTVArticleUnreadStatus(false, item.getTitle());
+        dbConn.setWebTVArticleUnreadStatus(false, article.getHeader());
         dbConn.close();
         Intent intent = new Intent(getActivity(), ArticleViewer.class);
-        intent.putExtra("item", item);
+        intent.putExtra("article", article);
 
         startActivity(intent);
     }

@@ -34,7 +34,7 @@
                 android:layout_width="120dp"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_height="wrap_content"
-                android:text="@string/dialog_submit"/>
+                android:text="Send"/>
 
         <Button
                 android:id="@+id/btn_cancel_comment"
@@ -44,7 +44,7 @@
                 android:layout_marginLeft="10dp"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_toRightOf="@+id/btn_post_comment"
-                android:text="@string/dialog_cancel"/>
+                android:text="Annuller"/>
 
 
     </RelativeLayout>
