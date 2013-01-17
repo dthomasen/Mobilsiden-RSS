@@ -46,13 +46,12 @@ public class ArticleDownloader extends AsyncTask<Intent, Void, Intent> {
         String formattedDate = dateFormatter.format(today);
 
         c.setTime(today);
-        c.add(Calendar.DAY_OF_YEAR, -5);
+        c.add(Calendar.DAY_OF_YEAR, -7);
         Date dateFiveDaysAgo = c.getTime();
         String dateFiveDaysAgoF = dateFormatter.format(dateFiveDaysAgo);
 
         SharedPreferences settings = parentActivity.getSharedPreferences("mobilsiden", 0);
-        //String fromDate = settings.getString("lastUpdatedDate", dateFiveDaysAgoF);
-        String fromDate = dateFormatter.format(dateFiveDaysAgo);
+        String fromDate = settings.getString("lastUpdatedDate", dateFiveDaysAgoF);
 
         String newsJson = downloadArticleJson("1", fromDate);
         String reviewsJson = downloadArticleJson("19", fromDate);
@@ -150,6 +149,9 @@ public class ArticleDownloader extends AsyncTask<Intent, Void, Intent> {
         }
 
         dbConn.close();
+
+        Intent broad = new Intent("ArticlesUpdated");
+        parentActivity.sendBroadcast(broad);
     }
 
     public String convertStreamToString(InputStream is) throws IOException {

@@ -6,7 +6,9 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.view.ContextThemeWrapper;
 import android.widget.Toast;
@@ -75,6 +77,22 @@ public class MainActivity extends SherlockFragmentActivity implements
                     .setTabListener(this));
         }
 
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (settings.getBoolean("firstRun", true)) {
+            AlertDialog.Builder noCommentsPopup = new AlertDialog.Builder(new ContextThemeWrapper(this, android.R.style.Theme_Holo_Dialog));
+
+            noCommentsPopup.setMessage("Artikler for de seneste 7 dage hentes.\nApp'en kan låse imens.\nVent venligst.");
+            noCommentsPopup.setTitle("Første Åbning");
+            noCommentsPopup.setPositiveButton("OK", null);
+            noCommentsPopup.setCancelable(true);
+            noCommentsPopup.create().show();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("firstRun", false);
+            editor.commit();
+        }
+
+        Toast.makeText(this, "Opdaterer artikler...", Toast.LENGTH_SHORT).show();
         Intent downloadIntent = new Intent();
         downloadIntent.putExtra("Activity", this);
         ArticleDownloader articleDownloader = new ArticleDownloader();

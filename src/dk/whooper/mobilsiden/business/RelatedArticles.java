@@ -1,18 +1,19 @@
 package dk.whooper.mobilsiden.business;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class RelatedArticles {
+public class RelatedArticles implements Serializable {
     private String author;
     private String bodytext;
     private String category;
     private String comments;
     private String header;
     private String id;
-    private List images;
+    private List<Images> images;
     private String published;
     private String url;
-    private List videos;
+    private List<Videos> videos;
     private Number views;
 
     public String getAuthor() {
@@ -63,11 +64,11 @@ public class RelatedArticles {
         this.id = id;
     }
 
-    public List getImages() {
+    public List<Images> getImages() {
         return this.images;
     }
 
-    public void setImages(List images) {
+    public void setImages(List<Images> images) {
         this.images = images;
     }
 
@@ -87,11 +88,11 @@ public class RelatedArticles {
         this.url = url;
     }
 
-    public List getVideos() {
+    public List<Videos> getVideos() {
         return this.videos;
     }
 
-    public void setVideos(List videos) {
+    public void setVideos(List<Videos> videos) {
         this.videos = videos;
     }
 

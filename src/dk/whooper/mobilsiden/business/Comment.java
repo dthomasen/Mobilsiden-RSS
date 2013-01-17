@@ -1,6 +1,8 @@
 package dk.whooper.mobilsiden.business;
 
-public class Comment {
+import java.io.Serializable;
+
+public class Comment implements Serializable {
     private String content;
     private String created;
     private Number id;

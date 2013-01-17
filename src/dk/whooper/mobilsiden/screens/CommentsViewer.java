@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -60,7 +59,6 @@ public class CommentsViewer extends SherlockActivity {
 
 
         link = getIntent().getExtras().getString("link");
-        Log.d(TAG, "link!!: " + link);
         WebView webView = (WebView) findViewById(R.id.webView1);
 
         webView.getSettings().setJavaScriptEnabled(true);
@@ -149,7 +147,7 @@ public class CommentsViewer extends SherlockActivity {
                 //
                 // http://developer.android.com/design/patterns/navigation.html#up-vs-back
                 //
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             case R.id.menu_settings:
                 Intent i = new Intent(this, SettingsActivity.class);

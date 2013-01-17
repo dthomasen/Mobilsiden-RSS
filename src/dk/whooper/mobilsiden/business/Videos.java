@@ -1,6 +1,8 @@
 package dk.whooper.mobilsiden.business;
 
-public class Videos {
+import java.io.Serializable;
+
+public class Videos implements Serializable {
     private String urlImage;
     private String title;
     private String url;

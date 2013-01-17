@@ -1,6 +1,8 @@
 package dk.whooper.mobilsiden.business;
 
-public class Images {
+import java.io.Serializable;
+
+public class Images implements Serializable {
     private String thumbUrl;
     private String title;
     private String url;

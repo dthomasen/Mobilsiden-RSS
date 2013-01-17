@@ -28,7 +28,6 @@ public class ArticleBaseAdapter extends BaseAdapter {
         this.mContext = context;
         this.articleList = itemArray;
         this.inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
     }
 
     @Override

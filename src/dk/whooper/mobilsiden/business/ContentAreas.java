@@ -1,6 +1,8 @@
 package dk.whooper.mobilsiden.business;
 
-public class ContentAreas {
+import java.io.Serializable;
+
+public class ContentAreas implements Serializable {
     private Number id;
     private String name;
     private Number totalArticles;

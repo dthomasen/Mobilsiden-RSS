@@ -1,6 +1,8 @@
 package dk.whooper.mobilsiden.business;
 
-public class Tags {
+import java.io.Serializable;
+
+public class Tags implements Serializable {
 
     //Boiler plate class to avoid getting tags from articles
 }

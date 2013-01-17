@@ -1,20 +1,22 @@
 package dk.whooper.mobilsiden.business;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class Article implements Serializable {
+public class Article implements Serializable, Comparable<Article> {
     private String author;
     private String bodytext;
     private String category;
     private String comments;
     private String header;
     private String id;
-    private List images;
+    private List<Images> images;
     private String published;
-    private List relatedArticles;
+    private List<RelatedArticles> relatedArticles;
     private String url;
-    private List videos;
+    private List<Videos> videos;
     private Integer views;
     private Boolean unread;
 
@@ -74,11 +76,11 @@ public class Article implements Serializable {
         this.id = id;
     }
 
-    public List getImages() {
+    public List<Images> getImages() {
         return this.images;
     }
 
-    public void setImages(List images) {
+    public void setImages(List<Images> images) {
         this.images = images;
     }
 
@@ -90,11 +92,11 @@ public class Article implements Serializable {
         this.published = published;
     }
 
-    public List getRelatedArticles() {
+    public List<RelatedArticles> getRelatedArticles() {
         return this.relatedArticles;
     }
 
-    public void setRelatedArticles(List relatedArticles) {
+    public void setRelatedArticles(List<RelatedArticles> relatedArticles) {
         this.relatedArticles = relatedArticles;
     }
 
@@ -106,11 +108,11 @@ public class Article implements Serializable {
         this.url = url;
     }
 
-    public List getVideos() {
+    public List<Videos> getVideos() {
         return this.videos;
     }
 
-    public void setVideos(List videos) {
+    public void setVideos(List<Videos> videos) {
         this.videos = videos;
     }
 
@@ -120,5 +122,17 @@ public class Article implements Serializable {
 
     public void setViews(Integer views) {
         this.views = views;
+    }
+
+    @Override
+    public int compareTo(Article another) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            return dateFormatter.parse(another.getPublished()).compareTo(dateFormatter.parse(this.getPublished()));
+        } catch (ParseException e) {
+            //Nothing
+        }
+
+        return 0;
     }
 }

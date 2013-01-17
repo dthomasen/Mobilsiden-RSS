@@ -36,6 +36,13 @@
                 android:logo="@drawable/logonavigation">
         </activity>
 
+        <activity
+                android:name="dk.whooper.mobilsiden.screens.SettingsActivity"
+                android:label="@string/app_name"
+                android:logo="@drawable/logonavigation"
+                android:parentActivityName="dk.whooper.mobilsiden.screens.MainActivity">
+        </activity>
+
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
         <activity android:name="com.facebook.LoginActivity"/>
 

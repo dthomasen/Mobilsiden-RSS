@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -18,7 +17,14 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import dk.whooper.mobilsiden.R;
 import dk.whooper.mobilsiden.business.Article;
+import dk.whooper.mobilsiden.business.Images;
+import dk.whooper.mobilsiden.business.Videos;
+import dk.whooper.mobilsiden.service.ArticleDownloaderById;
+import dk.whooper.mobilsiden.service.DatabaseHelper;
 import dk.whooper.mobilsiden.service.FacebookWrapper;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ArticleViewer extends SherlockActivity {
 
@@ -31,6 +37,8 @@ public class ArticleViewer extends SherlockActivity {
     private String link;
     private String content;
     private FacebookWrapper fbWrapper = new FacebookWrapper("487027081336289");
+    private List<Images> images;
+    private List<Videos> videos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +57,27 @@ public class ArticleViewer extends SherlockActivity {
         setContentView(R.layout.activity_article_viewer);
 
         article = (Article) getIntent().getExtras().getSerializable("article");
+        DatabaseHelper dbConn = new DatabaseHelper(this);
 
-        if (article != null) {
-            description = "";
-            title = article.getHeader();
-            content = article.getBodytext();
-            Log.d(TAG, "link!!: " + article.getUrl());
-            link = article.getUrl();
-        } else {
-            Log.d(TAG, "link!!2: " + getIntent().getExtras().getString("link"));
-            link = getIntent().getExtras().getString("link");
+        description = "";
+        title = article.getHeader();
+        content = article.getBodytext();
+        link = article.getUrl();
+        images = dbConn.getImagesForArticle(article.getId());
+        videos = dbConn.getVideosForArticle(article.getId());
+
+        if (images.size() == 0) {
+            images = article.getImages(); //If following link in article
+        }
+        if (videos.size() == 0) {
+            videos = article.getVideos();
+        }
+
+        String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body><h1 style=\"font-size: 15px;\">" + article.getHeader() + "</h1>";
+        start = start + "<p><div style=\"text-decoration: underline; font-size: 13px;\">Af " + article.getAuthor() + "</div></p>";
+
+        if (images != null && images.size() != 1 && images.size() != 0) {
+            start = start + "<center><div style=\"border-style:solid; border-width:1px; border-color:#dcdcdc; padding:3px;\"><img src=\"" + images.get(1).getUrl() + "\"><div style=\"font-size: 13px; padding:3px; color:#888;\">" + images.get(1).getTitle() + "</div></div></center>";
         }
 
         WebView webView = (WebView) findViewById(R.id.webView1);
@@ -71,12 +90,15 @@ public class ArticleViewer extends SherlockActivity {
                 activity.setProgress(progress * 100);
             }
         });
+        content = "<div style=\"font-size: 13px;\">" + content + "</div>";
+        if (videos != null && videos.size() != 0) {
+            youtubeLink = videos.get(0).getUrl();
+        }
 
         webView.setWebViewClient(new Callback());
         webView.setHorizontalScrollBarEnabled(false);
         webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 
-        String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body>";
         String end = "</body></html>";
         webView.loadData(start + content + end, "text/html; charset=UTF-8", null);
     }
@@ -122,7 +144,7 @@ public class ArticleViewer extends SherlockActivity {
                 //
                 // http://developer.android.com/design/patterns/navigation.html#up-vs-back
                 //
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             case R.id.menu_settings:
                 Intent i = new Intent(this, SettingsActivity.class);
@@ -156,9 +178,23 @@ public class ArticleViewer extends SherlockActivity {
             Log.d(TAG, "URL IS: " + url);
             if (url.contains("mobilsiden.dk")) {
                 Log.d(TAG, "Mobilsiden link found");
-                Intent i = new Intent(activity, ArticleViewer.class);
-                i.putExtra("link", url);
-                activity.startActivity(i);
+                //http://www.mobilsiden.dk/nyheder/2013-bliver-aret-for-5-tommer-skaerme,lid.25220/%22
+                ArticleDownloaderById articleDownloader = new ArticleDownloaderById();
+                String id = url.split("lid.")[1];
+                id = id.substring(0, id.length() - 1);
+                Log.d(TAG, "URL IS: " + id);
+                Article articleRequest = null;
+                try {
+                    articleRequest = articleDownloader.execute(id).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                Intent requestIntent = new Intent(activity, ArticleViewer.class);
+                requestIntent.putExtra("article", articleRequest);
+                activity.startActivity(requestIntent);
                 return true;
             } else {
                 Uri uriUrl = Uri.parse(url);

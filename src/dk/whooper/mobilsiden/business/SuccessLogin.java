@@ -1,6 +1,8 @@
 package dk.whooper.mobilsiden.business;
 
-public class SuccessLogin {
+import java.io.Serializable;
+
+public class SuccessLogin implements Serializable {
     private Number id;
     private String name;
     private String token;
