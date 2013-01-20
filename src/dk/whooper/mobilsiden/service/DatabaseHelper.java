@@ -258,6 +258,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 imageList.add(image);
             } while (cursor.moveToNext());
         }
+        db.close();
         return imageList;
     }
 
@@ -279,6 +280,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 videoList.add(video);
             } while (cursor.moveToNext());
         }
+        db.close();
         return videoList;
     }
 

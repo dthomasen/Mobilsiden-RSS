@@ -97,7 +97,6 @@ public class MainActivity extends SherlockFragmentActivity implements
         downloadIntent.putExtra("Activity", this);
         ArticleDownloader articleDownloader = new ArticleDownloader();
         articleDownloader.execute(downloadIntent);
-
     }
 
     @Override

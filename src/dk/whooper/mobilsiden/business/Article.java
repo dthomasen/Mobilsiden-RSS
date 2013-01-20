@@ -1,8 +1,11 @@
 package dk.whooper.mobilsiden.business;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class Article implements Serializable, Comparable<Article> {
@@ -127,12 +130,19 @@ public class Article implements Serializable, Comparable<Article> {
     @Override
     public int compareTo(Article another) {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date date1 = null;
+        Date date2 = null;
         try {
-            return dateFormatter.parse(another.getPublished()).compareTo(dateFormatter.parse(this.getPublished()));
+            date1 = dateFormatter.parse(this.getPublished().split("\\+")[0]);
+            date2 = dateFormatter.parse(another.getPublished().split("\\+")[0]);
+            Long n1 = date1.getTime();
+            Long n2 = date2.getTime();
+            if (n1 < n2) return -1;
+            else if (n1 > n2) return 1;
+            else return 0;
         } catch (ParseException e) {
-            //Nothing
+            Log.d("Article", "Parse exception");
         }
-
         return 0;
     }
 }
