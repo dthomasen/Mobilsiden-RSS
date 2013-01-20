@@ -22,6 +22,9 @@ import dk.whooper.mobilsiden.business.Videos;
 import dk.whooper.mobilsiden.service.ArticleDownloaderById;
 import dk.whooper.mobilsiden.service.DatabaseHelper;
 import dk.whooper.mobilsiden.service.FacebookWrapper;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -76,9 +79,19 @@ public class ArticleViewer extends SherlockActivity {
         String start = "<html><head><meta http-equiv='Content-Type' content='text/html' charset='UTF-8' /></head><body><h1 style=\"font-size: 15px;\">" + article.getHeader() + "</h1>";
         start = start + "<p><div style=\"text-decoration: underline; font-size: 13px;\">Af " + article.getAuthor() + "</div></p>";
 
-        if (images != null && images.size() != 1 && images.size() != 0) {
-            start = start + "<center><div style=\"border-style:solid; border-width:1px; border-color:#dcdcdc; padding:3px;\"><img src=\"" + images.get(1).getUrl() + "\"><div style=\"font-size: 13px; padding:3px; color:#888;\">" + images.get(1).getTitle() + "</div></div></center>";
+        Document doc = Jsoup.parse(content);   //Inserting images after H2 tags in the article
+        Elements h2Tags = doc.select("h2");
+        int counter = 2;
+        if (images != null && images.size() != 1) {
+            for (int i = 1; i < h2Tags.size(); i++) {
+                if (counter < images.size()) {
+                    h2Tags.get(i).append("<center><div style=\"border-style:solid; border-width:1px; border-color:#dcdcdc; padding:3px;\"><img src=\"" + images.get(counter).getUrl() + "\"><div style=\"font-size: 13px; padding:3px; color:#888;\">" + images.get(counter).getTitle() + "</div></div></center>");
+                    counter++;
+                }
+            }
+            content = "<center><div style=\"border-style:solid; border-width:1px; border-color:#dcdcdc; padding:3px;\"><img src=\"" + images.get(1).getUrl() + "\"><div style=\"font-size: 13px; padding:3px; color:#888;\">" + images.get(0).getTitle() + "</div></div></center>" + doc.toString();
         }
+
 
         WebView webView = (WebView) findViewById(R.id.webView1);
 

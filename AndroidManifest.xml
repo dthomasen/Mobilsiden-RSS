@@ -34,7 +34,8 @@
                 android:name="dk.whooper.mobilsiden.screens.MainActivity"
                 android:label="@string/app_name"
                 android:logo="@drawable/logonavigation"
-                android:hardwareAccelerated="true">
+                android:hardwareAccelerated="true"
+                >
         </activity>
 
         <activity

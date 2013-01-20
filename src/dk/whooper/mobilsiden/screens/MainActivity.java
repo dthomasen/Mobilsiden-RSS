@@ -92,7 +92,6 @@ public class MainActivity extends SherlockFragmentActivity implements
             editor.commit();
         }
 
-        Toast.makeText(this, "Opdaterer artikler...", Toast.LENGTH_SHORT).show();
         Intent downloadIntent = new Intent();
         downloadIntent.putExtra("Activity", this);
         ArticleDownloader articleDownloader = new ArticleDownloader();
