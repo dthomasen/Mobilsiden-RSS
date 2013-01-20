@@ -115,6 +115,8 @@ public class ArticleBaseAdapter extends BaseAdapter {
             mHolder.txt2.setText(articleSentences[0] + "." + articleSentences[1] + ".");
         } catch (NumberFormatException e) {
             mHolder.txt2.setText(articleSentences[0] + ".");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            mHolder.txt2.setText(articleSentences[0] + ".");
         }
 
 
