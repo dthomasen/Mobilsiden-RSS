@@ -110,7 +110,13 @@ public class ArticleBaseAdapter extends BaseAdapter {
         String[] articleSentences = articleText.split("\\.");
 
         mHolder.txt1.setText(articleList.get(position).getHeader());
-        mHolder.txt2.setText(articleSentences[0] + ".");
+        try {
+            Integer.parseInt(articleSentences[1].substring(0, 1)); //To avoid a number (4.000), passing as a sentence
+            mHolder.txt2.setText(articleSentences[0] + "." + articleSentences[1] + ".");
+        } catch (NumberFormatException e) {
+            mHolder.txt2.setText(articleSentences[0] + ".");
+        }
+
 
         String[] dateSplitted = articleList.get(position).getPublished().split("T");
         String date = dateSplitted[0];
